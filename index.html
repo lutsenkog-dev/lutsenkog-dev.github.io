@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IDST — Лабораторні роботи</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green-dark:  #2D4A1E;
+      --green-mid:   #4A7A2A;
+      --green-light: #D6E8C4;
+      --yellow-warm: #F5C842;
+      --brown-mid:   #7A5A1A;
+      --brown-light: #C8A84B;
+      --cream:       #F7F2E4;
+      --card-bg:     #FDFAF2;
+      --border:      #C8BB8A;
+      --text-main:   #2A2000;
+      --text-muted:  #5C4D1A;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--cream);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: var(--green-dark);
+      border-bottom: 4px solid var(--yellow-warm);
+      padding: 40px 24px 36px;
+      text-align: center;
+    }
+
+    header .eyebrow {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--yellow-warm);
+      margin-bottom: 10px;
+    }
+
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(22px, 4vw, 34px);
+      color: #fff;
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      font-size: 14px;
+      color: #c8e8a8;
+    }
+
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 24px 64px;
+      flex: 1;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--brown-mid);
+      margin-bottom: 20px;
+    }
+
+    .lab-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .lab-card {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .lab-card:hover {
+      border-color: var(--green-mid);
+      box-shadow: 0 2px 12px rgba(45,74,30,0.10);
+    }
+
+    .lab-card.soon {
+      opacity: 0.5;
+      pointer-events: none;
+    }
+
+    .lab-num {
+      flex-shrink: 0;
+      width: 48px;
+      height: 48px;
+      background: var(--green-dark);
+      color: #fff;
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lab-card.soon .lab-num {
+      background: var(--border);
+    }
+
+    .lab-info { flex: 1; }
+
+    .lab-info h2 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--green-dark);
+      margin-bottom: 3px;
+      line-height: 1.3;
+    }
+
+    .lab-card.soon .lab-info h2 { color: var(--text-muted); }
+
+    .lab-info p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .lab-arrow {
+      font-size: 20px;
+      color: var(--green-mid);
+      flex-shrink: 0;
+    }
+
+    .lab-card.soon .lab-arrow { color: var(--border); }
+
+    .badge-soon {
+      font-size: 11px;
+      font-weight: 700;
+      background: var(--border);
+      color: var(--brown-mid);
+      border-radius: 20px;
+      padding: 2px 10px;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      padding: 20px 24px;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Навчальні матеріали</div>
+  <h1>Інформаційно-цифрові<br>системи та технології</h1>
+  <p>Лабораторні роботи · 2026–2027</p>
+</header>
+
+<main>
+  <div class="section-label">Лабораторні роботи</div>
+
+  <div class="lab-list">
+
+    <a class="lab-card" href="IDSTLR1.html">
+      <div class="lab-num">1</div>
+      <div class="lab-info">
+        <h2>Побудова персонального цифрового середовища студента</h2>
+        <p>Google Workspace Survival Kit — Gmail, Drive, Keep, Maps</p>
+      </div>
+      <div class="lab-arrow">›</div>
+    </a>
+
+    <div class="lab-card soon">
+      <div class="lab-num">2</div>
+      <div class="lab-info">
+        <h2>Лабораторна робота 2 <span class="badge-soon">Незабаром</span></h2>
+        <p>Буде додано</p>
+      </div>
+      <div class="lab-arrow">›</div>
+    </div>
+
+    <div class="lab-card soon">
+      <div class="lab-num">3</div>
+      <div class="lab-info">
+        <h2>Лабораторна робота 3 <span class="badge-soon">Незабаром</span></h2>
+        <p>Буде додано</p>
+      </div>
+      <div class="lab-arrow">›</div>
+    </div>
+
+    <div class="lab-card soon">
+      <div class="lab-num">4</div>
+      <div class="lab-info">
+        <h2>Лабораторна робота 4 <span class="badge-soon">Незабаром</span></h2>
+        <p>Буде додано</p>
+      </div>
+      <div class="lab-arrow">›</div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  IDST · lutsenkog-dev · 2026–2027
+</footer>
+
+</body>
+</html>
