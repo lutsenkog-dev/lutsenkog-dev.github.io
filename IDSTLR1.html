@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Лабораторна робота №1 — Цифрове середовище студента</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green-dark:   #2D4A1E;
+      --green-mid:    #4A7A2A;
+      --green-light:  #D6E8C4;
+      --yellow-warm:  #F5C842;
+      --yellow-pale:  #FFFBEA;
+      --brown-dark:   #3D2B00;
+      --brown-mid:    #7A5A1A;
+      --brown-light:  #C8A84B;
+      --cream:        #F7F2E4;
+      --card-bg:      #FDFAF2;
+      --step-bg:      #F0EDD8;
+      --text-main:    #2A2000;
+      --text-muted:   #5C4D1A;
+      --border:       #C8BB8A;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: var(--cream);
+      color: var(--text-main);
+      line-height: 1.75;
+      font-size: 16px;
+    }
+
+    /* ── Header ── */
+    header {
+      background-color: var(--green-dark);
+      color: #fff;
+      padding: 48px 24px 40px;
+      text-align: center;
+      border-bottom: 5px solid var(--yellow-warm);
+    }
+
+    header .eyebrow {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--yellow-warm);
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(24px, 4vw, 38px);
+      line-height: 1.25;
+      color: #fff;
+      max-width: 700px;
+      margin: 0 auto 16px;
+    }
+
+    header .subtitle {
+      font-size: 15px;
+      color: #c8e8a8;
+      max-width: 580px;
+      margin: 0 auto;
+    }
+
+    /* ── Layout ── */
+    main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 48px 24px 64px;
+    }
+
+    /* ── Meta block (мета, обладнання) ── */
+    .meta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .meta-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 24px;
+    }
+
+    .meta-card h3 {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--brown-mid);
+      margin-bottom: 8px;
+    }
+
+    .meta-card p {
+      font-size: 15px;
+      color: var(--text-main);
+    }
+
+    /* ── Scenario banner ── */
+    .scenario {
+      background: var(--green-light);
+      border-left: 4px solid var(--green-mid);
+      border-radius: 0 8px 8px 0;
+      padding: 20px 24px;
+      margin-bottom: 44px;
+      font-size: 15px;
+      color: var(--green-dark);
+    }
+
+    .scenario strong {
+      font-weight: 700;
+    }
+
+    /* ── Before-start block ── */
+    .before-start {
+      background: var(--green-dark);
+      border-radius: 10px;
+      padding: 28px 32px;
+      margin-bottom: 44px;
+      color: #fff;
+    }
+
+    .before-start h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      color: var(--yellow-warm);
+      margin-bottom: 6px;
+    }
+
+    .before-start .before-intro {
+      font-size: 14px;
+      color: #c8e8a8;
+      margin-bottom: 20px;
+    }
+
+    .before-start ol {
+      list-style: none;
+      counter-reset: before-counter;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .before-start ol li {
+      counter-increment: before-counter;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .before-start ol li::before {
+      content: counter(before-counter);
+      flex-shrink: 0;
+      width: 26px;
+      height: 26px;
+      background: var(--yellow-warm);
+      color: var(--brown-dark);
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 3px;
+    }
+
+    .before-start .template-inline {
+      background: rgba(255,255,255,0.08);
+      border-radius: 6px;
+      padding: 12px 16px;
+      font-size: 13.5px;
+      line-height: 2;
+      margin-top: 8px;
+    }
+
+    .before-start .template-inline em {
+      color: #c8e8a8;
+    }
+
+    .before-start .ui-ref-dark {
+      background: rgba(255,255,255,0.15);
+      border-radius: 4px;
+      padding: 1px 7px;
+      font-weight: 700;
+      font-size: 13.5px;
+    }
+
+    /* ── Task cards ── */
+    .task {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 36px;
+      overflow: hidden;
+    }
+
+    .task-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 24px 28px;
+      background: var(--yellow-pale);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .task-num {
+      flex-shrink: 0;
+      width: 44px;
+      height: 44px;
+      background: var(--green-dark);
+      color: #fff;
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+    }
+
+    .task-title-block h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      color: var(--green-dark);
+      line-height: 1.3;
+    }
+
+    .task-title-block .task-desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-style: italic;
+    }
+
+    .task-body {
+      padding: 24px 28px;
+    }
+
+    /* ── Requirements list (what to do) ── */
+    .requirements {
+      margin-bottom: 28px;
+    }
+
+    .requirements h4 {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--brown-mid);
+      margin-bottom: 12px;
+    }
+
+    .requirements ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .requirements ul li {
+      display: flex;
+      gap: 10px;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .requirements ul li::before {
+      content: '›';
+      color: var(--green-mid);
+      font-weight: 700;
+      font-size: 18px;
+      line-height: 1.4;
+      flex-shrink: 0;
+    }
+
+    /* ── Steps ── */
+    .steps-section h4 {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--brown-mid);
+      margin-bottom: 16px;
+    }
+
+    .steps-group {
+      margin-bottom: 24px;
+    }
+
+    .steps-group-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--green-dark);
+      background: var(--green-light);
+      border-radius: 6px;
+      padding: 8px 14px;
+      margin-bottom: 12px;
+      display: inline-block;
+    }
+
+    .steps-list {
+      list-style: none;
+      counter-reset: step-counter;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-left: 8px;
+    }
+
+    .steps-list li {
+      counter-increment: step-counter;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      font-size: 15px;
+      line-height: 1.65;
+    }
+
+    .steps-list li::before {
+      content: counter(step-counter);
+      flex-shrink: 0;
+      width: 26px;
+      height: 26px;
+      background: var(--brown-light);
+      color: var(--brown-dark);
+      border-radius: 50%;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 3px;
+    }
+
+    .steps-list li .ui-ref {
+      background: var(--step-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--green-dark);
+      white-space: nowrap;
+    }
+
+    /* ── Template box ── */
+    .template-box {
+      background: var(--step-bg);
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      padding: 18px 22px;
+      margin-top: 20px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .template-box h5 {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--brown-mid);
+      margin-bottom: 10px;
+    }
+
+    .template-box pre {
+      font-family: 'Nunito', sans-serif;
+      white-space: pre-wrap;
+      line-height: 1.9;
+    }
+
+    .template-box .placeholder {
+      color: var(--green-mid);
+      font-style: italic;
+    }
+
+    /* ── Table ── */
+    .styled-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14.5px;
+      margin: 16px 0;
+    }
+
+    .styled-table thead tr {
+      background: var(--green-dark);
+      color: #fff;
+    }
+
+    .styled-table thead th {
+      padding: 11px 14px;
+      text-align: left;
+      font-weight: 700;
+    }
+
+    .styled-table tbody tr:nth-child(odd)  { background: var(--card-bg); }
+    .styled-table tbody tr:nth-child(even) { background: var(--yellow-pale); }
+
+    .styled-table tbody td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    .styled-table tbody td ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .styled-table tbody td ul li::before {
+      content: '• ';
+      color: var(--green-mid);
+      font-weight: 700;
+    }
+
+    /* ── Divider ── */
+    .section-divider {
+      border: none;
+      border-top: 2px dashed var(--border);
+      margin: 32px 0;
+    }
+
+    /* ── Report section ── */
+    .report-section {
+      background: var(--green-dark);
+      color: #fff;
+      border-radius: 10px;
+      padding: 32px 32px 28px;
+      margin-top: 8px;
+    }
+
+    .report-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: var(--yellow-warm);
+      margin-bottom: 6px;
+    }
+
+    .report-section .report-intro {
+      font-size: 14px;
+      color: #c8e8a8;
+      margin-bottom: 24px;
+    }
+
+    .report-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .report-table thead tr {
+      background: rgba(255,255,255,0.12);
+    }
+
+    .report-table thead th {
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 700;
+      color: var(--yellow-warm);
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .report-table tbody tr { border-bottom: 1px solid rgba(255,255,255,0.1); }
+
+    .report-table tbody td {
+      padding: 10px 14px;
+      color: #eee;
+      vertical-align: top;
+    }
+
+    .report-table tbody td ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .report-table tbody td ul li::before {
+      content: '→ ';
+      color: var(--yellow-warm);
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+      padding: 24px;
+      border-top: 1px solid var(--border);
+      margin-top: 16px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Інформаційно-цифрові системи та технології</div>
+  <h1>Лабораторна робота №1<br>Побудова персонального цифрового середовища студента</h1>
+  <p class="subtitle">Google Workspace Survival Kit — ваш особистий набір цифрового виживання для навчання</p>
+</header>
+
+<main>
+
+  <!-- Мета і обладнання -->
+  <div class="meta-grid">
+    <div class="meta-card">
+      <h3>Мета роботи</h3>
+      <p>Налаштувати базові інструменти персонального цифрового простору, засвоїти правила цифрового етикету та безпечного обміну даними, опанувати навички оперативної обробки інформації.</p>
+    </div>
+    <div class="meta-card">
+      <h3>Обладнання та програмне забезпечення</h3>
+      <p>Комп'ютер з доступом до інтернету; веббраузер (Google Chrome або Firefox); обліковий запис Google.</p>
+    </div>
+  </div>
+
+  <!-- Сценарій -->
+  <div class="scenario">
+    <strong>Сценарій: «Digital Survival Kit»</strong><br>
+    У цій лабораторній роботі ви створюєте власну систему цифрової комунікації, зберігання та швидкого опрацювання навчальних матеріалів. Зібраний цифровий простір слугуватиме персональним набором для ефективного та безстресового навчання протягом усього академічного року.
+  </div>
+
+  <!-- ── ПЕРЕД ПОЧАТКОМ ── -->
+  <div class="before-start">
+    <h3>⚑ Перед початком — структура папок і документ звіту</h3>
+    <p class="before-intro">Спочатку створіть папки на Диску та підготуйте документ звіту — він залишатиметься відкритим протягом усього заняття.</p>
+    <ol>
+      <li>Відкрийте Google Диск — <span class="ui-ref-dark">drive.google.com</span>.</li>
+      <li>Натисніть <span class="ui-ref-dark">+ Створити</span> → <span class="ui-ref-dark">Нова папка</span> → введіть назву <strong>1_Курс_2026-2027</strong> → <span class="ui-ref-dark">Створити</span>.</li>
+      <li>Двічі клікніть на папку, щоб увійти в неї. Створіть підпапку <strong>Інформаційно-цифрові_системи</strong>, а всередині неї — три каталоги: <strong>Лекції</strong>, <strong>Лабораторні</strong>, <strong>Проєкти</strong>.</li>
+      <li>Повернувшись до <strong>1_Курс_2026-2027</strong>, створіть підпапку для другої дисципліни (<strong>Вища_математика</strong> або інша) з каталогами <strong>Практичні</strong> та <strong>Завдання</strong>.</li>
+      <li>Перейдіть у <strong>Інформаційно-цифрові_системи → Лабораторні</strong>. Натисніть <span class="ui-ref-dark">+ Створити</span> → <span class="ui-ref-dark">Google Документи</span>.</li>
+      <li>Назвіть документ: <strong>Звіт 1 — Прізвище</strong> (наприклад: <em>Звіт 1 — Коваленко</em>).</li>
+      <li>
+        На початку документа оформіть шапку звіту:
+        <div class="template-inline">
+          Студент(ка) 1 курсу <em>[залиште «студент» або «студентка»]</em><br>
+          Прізвище Ім'я <em>[ваше прізвище та ім'я]</em><br>
+          Спеціальність 000 Назва спеціальності <em>[ваша спеціальність]</em><br>
+          Лабораторна робота 1.
+        </div>
+      </li>
+      <li>Залиште документ відкритим у окремій вкладці — після кожного пункту вставляйте скріншот під відповідним номером завдання.</li>
+    </ol>
+  </div>
+
+  <!-- ── ЗАВДАННЯ 1 ── -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">1</div>
+      <div class="task-title-block">
+        <h2>Налаштування професійної пошти в Gmail</h2>
+        <div class="task-desc">Оформлення робочого простору та автоматизація вхідної кореспонденції</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Встановити якісне та нейтральне фото профілю (аватар) у Gmail</li>
+          <li>Створити автоматичний підпис, який додаватиметься до всіх нових листів</li>
+          <li>Створити 3 ярлики із власними кольорами: <strong>#Навчання</strong>, <strong>#Оголошення</strong>, <strong>#Важливе</strong></li>
+          <li>Налаштувати фільтр: листи зі словами «Лабораторна», «Лекція» або «Методичка» автоматично отримують ярлик #Навчання</li>
+        </ul>
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">1.1 — Аватар та підпис</div>
+          <ol class="steps-list">
+            <li>Перейдіть у поштовий сервіс <strong>gmail.com</strong>.</li>
+            <li>У правому верхньому куті натисніть іконку шестерні → <span class="ui-ref">Переглянути всі налаштування</span>.</li>
+            <li>На вкладці <span class="ui-ref">Загальні</span> знайдіть розділ <strong>«Про мене»</strong> або <strong>«Моє фото»</strong> та завантажте аватар.</li>
+            <li>Прокрутіть донизу до розділу <strong>«Підпис»</strong> → натисніть <span class="ui-ref">Створити новий</span> → введіть назву підпису.</li>
+            <li>У текстовому полі введіть та відформатуйте підпис за шаблоном нижче.</li>
+            <li>У блоці <em>«Управління підписом»</em> встановіть підпис для режиму <span class="ui-ref">Для нових електронних листів</span>.</li>
+            <li>Прокрутіть до самого низу сторінки та натисніть <span class="ui-ref">Зберегти зміни</span>.</li>
+          </ol>
+
+          <div class="template-box">
+            <h5>Шаблон автоматичного підпису</h5>
+            <pre>З повагою,
+<span class="placeholder">[Ваше Ім'я та Прізвище]</span>
+Студент(ка) 1 курсу, групи <span class="placeholder">[Назва групи]</span>
+Факультет / Інститут <span class="placeholder">[Назва]</span>
+Telegram: <span class="placeholder">@username</span> | Email: <span class="placeholder">student@address.com</span></pre>
+          </div>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">1.2 — Створення ярликів</div>
+          <ol class="steps-list">
+            <li>Прокрутіть ліве бічне меню Gmail донизу та знайдіть пункт <span class="ui-ref">Створити новий ярлик</span> (або натисніть знак <span class="ui-ref">+</span> поруч із розділом «Ярлики»).</li>
+            <li>У діалоговому вікні введіть назву <strong>#Навчання</strong> та натисніть <span class="ui-ref">Створити</span>.</li>
+            <li>Повторіть кроки 1–2 для ярликів <strong>#Оголошення</strong> та <strong>#Важливе</strong> — створіть усі три.</li>
+            <li>Щоб призначити колір: наведіть курсор на ярлик <strong>#Навчання</strong> у лівому меню → натисніть три крапки <span class="ui-ref">⋮</span> → <span class="ui-ref">Колір ярлика</span> → оберіть будь-який колір.</li>
+            <li>Повторіть крок 4 для <strong>#Оголошення</strong> та <strong>#Важливе</strong>, обравши для кожного різний колір.</li>
+          </ol>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">1.3 — Налаштування фільтра</div>
+          <ol class="steps-list">
+            <li>У верхньому рядку пошуку натисніть іконку <span class="ui-ref">Параметри пошуку</span> (праворуч у рядку).</li>
+            <li>У полі <em>«Містить слова»</em> введіть: <strong>Лабораторна OR Лекція OR Методичка</strong></li>
+            <li>Натисніть <span class="ui-ref">Створити фільтр</span> внизу вікна.</li>
+            <li>Поставте прапорець біля <strong>«Застосувати ярлик»</strong> → виберіть зі списку <strong>#Навчання</strong>.</li>
+            <li>Натисніть <span class="ui-ref">Створити фільтр</span> для підтвердження.</li>
+          </ol>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── ЗАВДАННЯ 2 ── -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">2</div>
+      <div class="task-title-block">
+        <h2>Впорядкування хмарного сховища у Google Drive</h2>
+        <div class="task-desc">Створення логічної системи зберігання та спільного доступу до навчальних матеріалів</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>У папці <strong>Інформаційно-цифрові_системи</strong> створити файл Google Документи з назвою <strong>Візитівка_першокурсника</strong></li>
+          <li>Описати себе в документі (3–5 речень: зацікавлення, очікування від курсу, хобі)</li>
+          <li>Налаштувати доступ до файлу: <strong>«Усі, у кого є посилання — Коментатор»</strong></li>
+        </ul>
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">2.1 — Документ «Візитівка» та налаштування доступу</div>
+          <ol class="steps-list">
+            <li>На Google Диску перейдіть у папку <strong>Інформаційно-цифрові_системи</strong> (створена на початку заняття). Натисніть <span class="ui-ref">+ Створити</span> → <span class="ui-ref">Google Документи</span>.</li>
+            <li>У лівому верхньому куті замініть «Документ без назви» на <strong>Візитівка_першокурсника</strong>.</li>
+            <li>У тілі документа напишіть коротку інформацію про себе (3–5 речень).</li>
+            <li>У правому верхньому куті натисніть синю кнопку <span class="ui-ref">Поділитися</span>.</li>
+            <li>У блоці <em>«Загальний доступ»</em> змініть «Обмежений» на <span class="ui-ref">Усі, у кого є посилання</span>.</li>
+            <li>У випадаючому списку ролей змініть «Читач» на <span class="ui-ref">Коментатор</span>.</li>
+            <li>Натисніть <span class="ui-ref">Копіювати посилання</span>, потім <span class="ui-ref">Готово</span>.</li>
+          </ol>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── ЗАВДАННЯ 3 ── -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">3</div>
+      <div class="task-title-block">
+        <h2>Оперативні нотатки у Google Keep</h2>
+        <div class="task-desc">Опанування інструменту швидких нотаток та планування тижня</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Створити нотатку типу <strong>«Список з прапорцями»</strong> (Checklist) із 5–7 завдань на навчальний тиждень</li>
+          <li>Встановити кольорову мітку для нотатки</li>
+          <li>Закріпити нотатку (Pin) нагорі робочої області</li>
+        </ul>
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">3.1 — Створення чек-листа</div>
+          <ol class="steps-list">
+            <li>Перейдіть у сервіс Google Keep — <strong>keep.google.com</strong>.</li>
+            <li>Знизу панелі «Запишіть нотатку...» знайдіть рядок іконок та натисніть <span class="ui-ref">☑ Новий список</span> (іконка з прапорцем) — відкриється нотатка типу «чек-лист».</li>
+            <li>У полі <em>«Назва»</em> вгорі введіть: <strong>План на навчальний тиждень</strong>.</li>
+            <li>У полі <em>«Елемент списку»</em> введіть перше завдання та натисніть <strong>Enter</strong> — з'явиться новий рядок.</li>
+            <li>Додайте таким чином 5–7 завдань на тиждень.</li>
+            <li>У нижньому меню нотатки натисніть іконку <span class="ui-ref">Палітра 🎨</span> та оберіть колір фону.</li>
+            <li>Натисніть <span class="ui-ref">Готово</span> — нотатку збережено і вона з'явиться на головному екрані Keep.</li>
+            <li>На картці збереженої нотатки наведіть курсор → у правому верхньому куті натисніть іконку <span class="ui-ref">📌 Закріпити</span> (канцелярська кнопка) — нотатка переміститься нагору.</li>
+          </ol>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── ЗАВДАННЯ 4 ── -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">4</div>
+      <div class="task-title-block">
+        <h2>Геолокаційний квест у Google Maps</h2>
+        <div class="task-desc">Створення персональної карти навчальних та побутових локацій</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Створити приватний список місць під назвою <strong>«Студентські локації»</strong></li>
+          <li>Знайти та додати до списку: навчальний корпус, бібліотеку або коворкінг, кав'ярню</li>
+          <li>Прокласти маршрут від <strong>залізничного вокзалу</strong> до навчального корпусу, порівняти час пішки та транспортом</li>
+          <li>Зробити скріншот із розрахованим маршрутом</li>
+        </ul>
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">4.1 — Створення списку локацій</div>
+          <ol class="steps-list">
+            <li>Відкрийте Google Карти — <strong>maps.google.com</strong>.</li>
+            <li>Натисніть на іконку <span class="ui-ref">☰</span> (гамбургер-меню) у лівому верхньому куті поруч із рядком пошуку.</li>
+            <li>У меню виберіть <span class="ui-ref">Збережено</span>.</li>
+            <li>Перейдіть на вкладку <span class="ui-ref">Списки</span> та натисніть <span class="ui-ref">+ Новий список</span>.</li>
+            <li>Введіть назву <strong>Студентські локації</strong> та натисніть <span class="ui-ref">Створити</span>.</li>
+          </ol>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">4.2 — Пошук та збереження об'єктів</div>
+          <ol class="steps-list">
+            <li>У рядку пошуку введіть назву або адресу вашого <strong>навчального корпусу</strong> та натисніть Enter.</li>
+            <li>На картці знайденого об'єкта натисніть <span class="ui-ref">Зберегти</span> → у вікні поставте прапорець біля <strong>Студентські локації</strong> → <span class="ui-ref">Готово</span>.</li>
+            <li>Поверніться до пошуку та знайдіть найближчу <strong>бібліотеку або коворкінг</strong> — збережіть до того ж списку.</li>
+            <li>Аналогічно знайдіть та збережіть <strong>кав'ярню</strong> поруч із корпусом.</li>
+          </ol>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">4.3 — Побудова маршруту</div>
+          <ol class="steps-list">
+            <li>У рядку пошуку введіть <strong>залізничний вокзал</strong> вашого міста та відкрийте його картку.</li>
+            <li>На картці вокзалу натисніть <span class="ui-ref">Маршрути</span>.</li>
+            <li>У полі <em>«Куди»</em> введіть назву або адресу <strong>навчального корпусу</strong>.</li>
+            <li>На панелі вгорі оберіть режим <span class="ui-ref">🚌 Громадський транспорт</span> — запишіть час у дорозі.</li>
+            <li>Переключіть на режим <span class="ui-ref">🚶 Пішки</span> — порівняйте час.</li>
+            <li>Зробіть скріншот екрана з розрахованим маршрутом і часом для обох режимів.</li>
+          </ol>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ── ЗВІТ ── -->
+  <div class="report-section">
+    <h2>Подання звіту</h2>
+    <p class="report-intro">Після виконання всіх завдань перевірте звіт і здайте його через Google Classroom.</p>
+
+    <table class="report-table">
+      <thead>
+        <tr>
+          <th style="width:5%">#</th>
+          <th>Вимоги до звіту</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1</strong></td>
+          <td>Документ названо <strong>Звіт 1 — Прізвище</strong> і збережено в папці <strong>Інформаційно-цифрові_системи → Лабораторні</strong>.</td>
+        </tr>
+        <tr>
+          <td><strong>2</strong></td>
+          <td>Шапка документа містить: рядок «Студент(ка) 1 курсу», прізвище та ім'я, спеціальність, назву роботи.</td>
+        </tr>
+        <tr>
+          <td><strong>3</strong></td>
+          <td>Скріншоти вставлені під відповідними номерами пунктів: <strong>1.1, 1.2, 1.3, 2, 3, 4.2, 4.3</strong>.</td>
+        </tr>
+        <tr>
+          <td><strong>4</strong></td>
+          <td>За потреби скористайтеся <strong>Теоретичними матеріалами</strong> у Google Класі або пошуковиком.</td>
+        </tr>
+        <tr>
+          <td><strong>5</strong></td>
+          <td>Здайте документ у Google Classroom: відкрийте <strong>Завдання №1</strong> → <span style="background:rgba(255,255,255,0.15);border-radius:4px;padding:1px 7px;font-weight:700;">+ Додати або створити</span> → оберіть <strong>Звіт 1 — Прізвище</strong> зі свого Диска → натисніть <span style="background:rgba(255,255,255,0.15);border-radius:4px;padding:1px 7px;font-weight:700;">Здати</span>.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer>
+  Лабораторна робота №1 · Інформаційно-цифрові системи та технології · 2026–2027
+</footer>
+
+</body>
+</html>
