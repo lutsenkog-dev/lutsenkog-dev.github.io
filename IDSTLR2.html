@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Лабораторна робота №2 — Цифрові звички студента</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green-dark:   #2D4A1E;
+      --green-mid:    #4A7A2A;
+      --green-light:  #D6E8C4;
+      --yellow-warm:  #F5C842;
+      --yellow-pale:  #FFFBEA;
+      --brown-dark:   #3D2B00;
+      --brown-mid:    #7A5A1A;
+      --brown-light:  #C8A84B;
+      --cream:        #F7F2E4;
+      --card-bg:      #FDFAF2;
+      --step-bg:      #F0EDD8;
+      --text-main:    #2A2000;
+      --text-muted:   #5C4D1A;
+      --border:       #C8BB8A;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Nunito', sans-serif; background: var(--cream); color: var(--text-main); line-height: 1.75; font-size: 16px; }
+
+    header { background: var(--green-dark); color: #fff; padding: 48px 24px 40px; text-align: center; border-bottom: 5px solid var(--yellow-warm); }
+    header .eyebrow { font-size: 13px; font-weight: 700; letter-spacing: .12em; color: var(--yellow-warm); text-transform: uppercase; margin-bottom: 12px; }
+    header h1 { font-family: 'Playfair Display', serif; font-size: clamp(22px,4vw,36px); line-height: 1.25; margin: 0 auto 16px; max-width: 700px; }
+    header .subtitle { font-size: 15px; color: #c8e8a8; max-width: 580px; margin: 0 auto; }
+
+    main { max-width: 860px; margin: 0 auto; padding: 48px 24px 64px; }
+
+    .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px; }
+    .meta-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px 24px; }
+    .meta-card h3 { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 8px; }
+    .meta-card p { font-size: 15px; }
+
+    .scenario { background: var(--green-light); border-left: 4px solid var(--green-mid); border-radius: 0 8px 8px 0; padding: 20px 24px; margin-bottom: 16px; font-size: 15px; color: var(--green-dark); }
+
+    /* before-start */
+    .before-start { background: var(--green-dark); border-radius: 10px; padding: 28px 32px; margin-bottom: 44px; color: #fff; }
+    .before-start h3 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--yellow-warm); margin-bottom: 6px; }
+    .before-start .before-intro { font-size: 14px; color: #c8e8a8; margin-bottom: 20px; }
+    .before-start ol { list-style: none; counter-reset: bc; display: flex; flex-direction: column; gap: 12px; }
+    .before-start ol li { counter-increment: bc; display: flex; gap: 14px; align-items: flex-start; font-size: 15px; line-height: 1.6; }
+    .before-start ol li::before { content: counter(bc); flex-shrink: 0; width: 26px; height: 26px; background: var(--yellow-warm); color: var(--brown-dark); border-radius: 50%; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 3px; }
+    .ui-ref-dark { background: rgba(255,255,255,0.15); border-radius: 4px; padding: 1px 7px; font-weight: 700; font-size: 13.5px; }
+
+    /* task cards */
+    .task { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 36px; overflow: hidden; }
+    .task-header { display: flex; align-items: flex-start; gap: 20px; padding: 24px 28px; background: var(--yellow-pale); border-bottom: 1px solid var(--border); }
+    .task-num { flex-shrink: 0; width: 44px; height: 44px; background: var(--green-dark); color: #fff; font-family: 'Playfair Display', serif; font-size: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+    .task-title-block h2 { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--green-dark); line-height: 1.3; }
+    .task-title-block .task-desc { font-size: 14px; color: var(--text-muted); margin-top: 4px; font-style: italic; }
+    .task-body { padding: 24px 28px; }
+
+    .requirements { margin-bottom: 28px; }
+    .requirements h4 { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 12px; }
+    .requirements ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .requirements ul li { display: flex; gap: 10px; font-size: 15px; line-height: 1.6; }
+    .requirements ul li::before { content: '›'; color: var(--green-mid); font-weight: 700; font-size: 18px; line-height: 1.4; flex-shrink: 0; }
+
+    .steps-section h4 { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 16px; }
+    .steps-group { margin-bottom: 24px; }
+    .steps-group-title { font-size: 15px; font-weight: 700; color: var(--green-dark); background: var(--green-light); border-radius: 6px; padding: 8px 14px; margin-bottom: 12px; display: inline-block; }
+    .steps-list { list-style: none; counter-reset: sc; display: flex; flex-direction: column; gap: 10px; padding-left: 8px; }
+    .steps-list li { counter-increment: sc; display: flex; gap: 14px; align-items: flex-start; font-size: 15px; line-height: 1.65; }
+    .steps-list li::before { content: counter(sc); flex-shrink: 0; width: 26px; height: 26px; background: var(--brown-light); color: var(--brown-dark); border-radius: 50%; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 3px; }
+    .ui-ref { background: var(--step-bg); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; font-size: 13.5px; font-weight: 700; color: var(--green-dark); white-space: nowrap; }
+
+    .note-box { background: var(--green-light); border-left: 4px solid var(--green-mid); border-radius: 0 6px 6px 0; padding: 14px 18px; margin: 16px 0; font-size: 14px; color: var(--green-dark); }
+    .note-box strong { font-weight: 700; }
+
+    .screenshot-tag { display: inline-block; background: var(--yellow-warm); color: var(--brown-dark); font-size: 12px; font-weight: 700; border-radius: 4px; padding: 2px 10px; margin-top: 8px; }
+
+    .section-divider { border: none; border-top: 2px dashed var(--border); margin: 28px 0; }
+
+    /* question table */
+    .q-table { width: 100%; border-collapse: collapse; font-size: 14.5px; margin: 16px 0; }
+    .q-table thead tr { background: var(--green-dark); color: #fff; }
+    .q-table thead th { padding: 10px 14px; text-align: left; font-weight: 700; }
+    .q-table tbody tr:nth-child(odd)  { background: var(--card-bg); }
+    .q-table tbody tr:nth-child(even) { background: var(--yellow-pale); }
+    .q-table tbody td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; font-size: 14px; }
+    .q-table tbody td:first-child { font-weight: 700; color: var(--green-dark); width: 36px; text-align: center; }
+    .q-table .type-badge { display: inline-block; background: var(--green-light); color: var(--green-dark); font-size: 11px; font-weight: 700; border-radius: 4px; padding: 1px 8px; margin-left: 6px; }
+
+    /* report */
+    .report-section { background: var(--green-dark); color: #fff; border-radius: 10px; padding: 32px 32px 28px; margin-top: 8px; }
+    .report-section h2 { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--yellow-warm); margin-bottom: 6px; }
+    .report-section .report-intro { font-size: 14px; color: #c8e8a8; margin-bottom: 24px; }
+    .report-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .report-table thead tr { background: rgba(255,255,255,.12); }
+    .report-table thead th { padding: 10px 14px; text-align: left; font-weight: 700; color: var(--yellow-warm); border-bottom: 1px solid rgba(255,255,255,.2); }
+    .report-table tbody tr { border-bottom: 1px solid rgba(255,255,255,.1); }
+    .report-table tbody td { padding: 10px 14px; color: #eee; vertical-align: top; }
+
+    footer { text-align: center; font-size: 13px; color: var(--text-muted); padding: 24px; border-top: 1px solid var(--border); margin-top: 16px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Інформаційно-цифрові системи та технології</div>
+  <h1>Лабораторна робота №2<br>Google Forms — Онлайн-опитування</h1>
+  <p class="subtitle">Наскрізний кейс «Цифрові звички студента-першокурсника» — проєктування анкети та збір даних</p>
+</header>
+
+<main>
+
+  <div class="meta-grid">
+    <div class="meta-card">
+      <h3>Мета роботи</h3>
+      <p>Опанувати інструмент Google Forms для створення онлайн-опитувань: налаштування різних типів питань, логіки розгалуження, валідації відповідей та збору даних.</p>
+    </div>
+    <div class="meta-card">
+      <h3>Обладнання та ПЗ</h3>
+      <p>Комп'ютер з доступом до інтернету; веббраузер; корпоративний обліковий запис Google.</p>
+    </div>
+  </div>
+
+  <div class="scenario">
+    <strong>Наскрізний кейс:</strong> Ви продовжуєте будувати своє цифрове середовище. Щоб дослідити цифрові звички однокурсників, ви створюєте онлайн-анкету «Цифрові звички студента-першокурсника», розповсюджуєте її та отримуєте перші дані для аналізу в наступній роботі.
+  </div>
+
+  <!-- ПЕРЕД ПОЧАТКОМ -->
+  <div class="before-start">
+    <h3>⚑ Перед початком — створіть документ звіту</h3>
+    <p class="before-intro">Спочатку підготуйте документ звіту, який залишатиметься відкритим протягом усього заняття.</p>
+    <ol>
+      <li>На Google Диску перейдіть у папку <strong>Інформаційно-цифрові_системи → Лабораторні</strong>.</li>
+      <li>Натисніть <span class="ui-ref-dark">+ Створити</span> → <span class="ui-ref-dark">Google Документи</span>. Назвіть документ: <strong>Звіт 2 — Прізвище</strong>.</li>
+      <li>Оформіть шапку: Студент(ка) 1 курсу / Прізвище Ім'я / Спеціальність 000 Назва / Лабораторна робота 2.</li>
+      <li>Залиште документ відкритим у окремій вкладці — після кожного етапу вставляйте скріншот.</li>
+    </ol>
+  </div>
+
+  <!-- СТРУКТУРА АНКЕТИ -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">1</div>
+      <div class="task-title-block">
+        <h2>Створення форми та структура питань</h2>
+        <div class="task-desc">Проєктування анкети «Цифрові звички студента-першокурсника»</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Структура анкети</h4>
+        <table class="q-table">
+          <thead><tr><th>#</th><th>Питання</th><th>Тип</th></tr></thead>
+          <tbody>
+            <tr><td>—</td><td><strong>Розділ 1.</strong> Вступ та згода</td><td></td></tr>
+            <tr><td>1</td><td>Чи готові ви взяти участь в опитуванні?<br><em>Варіанти: Так / Ні</em></td><td>З варіантами відповіді <span class="type-badge">один варіант</span></td></tr>
+            <tr><td>—</td><td><strong>Розділ 2.</strong> Основні питання</td><td></td></tr>
+            <tr><td>2</td><td>Ваша стать<br><em>Варіанти: Чоловік / Жінка / Інше</em></td><td>З варіантами відповіді <span class="type-badge">один варіант</span></td></tr>
+            <tr><td>3</td><td>Ваш вік<br><em>Валідація: Число → Ціле число</em></td><td>Короткі відповіді</td></tr>
+            <tr><td>4</td><td>Оцініть свою впевненість у користуванні ПК (1 — зовсім не впевнений, 5 — дуже впевнений)</td><td>Лінійна шкала <span class="type-badge">1–5</span></td></tr>
+            <tr><td>5</td><td>Скільки годин на день ви проводите в інтернеті?<br><em>Варіанти: до 2 год / 2–4 год / більше 4 год</em></td><td>Спадаючий список</td></tr>
+            <tr><td>6</td><td>Які пристрої використовуєте для навчання?<br><em>Варіанти: Смартфон / Ноутбук / Планшет / ПК</em></td><td>Прапорці <span class="type-badge">кілька варіантів</span></td></tr>
+            <tr><td>7</td><td>Як часто ви використовуєте соціальні мережі?<br><em>Рядки: Instagram / TikTok / YouTube / Telegram / Facebook / X<br>Стовпці: Щодня / Кілька разів на тиждень / Рідко</em></td><td>Сітка прапорців <span class="type-badge">checkbox grid</span></td></tr>
+            <tr><td>8</td><td>Вкажіть ваш email для отримання результатів<br><em>Валідація: Текст → Електронна адреса</em></td><td>Короткі відповіді</td></tr>
+            <tr><td>—</td><td><strong>Розділ 3.</strong> Дякуємо за увагу</td><td></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">1.1 — Створення форми та розділів</div>
+          <ol class="steps-list">
+            <li>На Google Диску перейдіть у папку <strong>Інформаційно-цифрові_системи</strong>. Натисніть <span class="ui-ref">+ Створити</span> → <span class="ui-ref">Google Форми</span>.</li>
+            <li>Назвіть форму та її заголовок: <strong>«Цифрові звички студента-першокурсника»</strong>.</li>
+            <li>В описі форми напишіть вступне слово: <em>«Доброго дня! Я студент 1 курсу. Проводжу невелике дослідження цифрових звичок. Це займе 2–3 хвилини»</em>.</li>
+            <li>Натисніть іконку <span class="ui-ref">Додати розділ</span> (дві смужки, внизу правої панелі). Назвіть його <strong>«Основні питання»</strong>.</li>
+            <li>Додайте ще один розділ — назвіть його <strong>«Дякуємо за увагу»</strong>. У цьому розділі можна написати слова подяки.</li>
+          </ol>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">1.2 — Питання 1: Згода (з логічним розгалуженням)</div>
+          <ol class="steps-list">
+            <li>У <strong>Розділі 1</strong> додайте питання: <em>«Чи готові ви взяти участь в опитуванні?»</em>. Тип: <span class="ui-ref">З варіантами відповіді</span>. Варіанти: <strong>Так</strong>, <strong>Ні</strong>. Увімкніть «Обов'язкове».</li>
+            <li>Натисніть три крапки <span class="ui-ref">⋮</span> біля питання → <span class="ui-ref">Перейти до розділу на основі відповіді</span>.</li>
+            <li>Напроти <strong>«Так»</strong> оберіть → <span class="ui-ref">Розділ 2 (Основні питання)</span>.</li>
+            <li>Напроти <strong>«Ні»</strong> оберіть → <span class="ui-ref">Розділ 3 (Дякуємо за увагу)</span>.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: налаштування логічного розгалуження</div>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">1.3 — Питання 2–6 у Розділі 2</div>
+          <ol class="steps-list">
+            <li><strong>Питання 2 — Стать:</strong> Тип <span class="ui-ref">З варіантами відповіді</span>. Варіанти: Чоловік / Жінка / Інше. Обов'язкове.</li>
+            <li><strong>Питання 3 — Вік:</strong> Тип <span class="ui-ref">Короткі відповіді</span>. Натисніть три крапки → <span class="ui-ref">Перевірка відповіді</span> → оберіть <strong>Число → Ціле число</strong>. Обов'язкове.</li>
+            <li><strong>Питання 4 — Впевненість у ПК:</strong> Тип <span class="ui-ref">Лінійна шкала</span>. Встановіть діапазон від 1 до 5. Підпишіть: 1 = «Зовсім не впевнений», 5 = «Дуже впевнений». Обов'язкове.</li>
+            <li><strong>Питання 5 — Час в інтернеті:</strong> Тип <span class="ui-ref">Спадаючий список</span>. Варіанти: до 2 год / 2–4 год / більше 4 год. Обов'язкове.</li>
+            <li><strong>Питання 6 — Пристрої:</strong> Тип <span class="ui-ref">Прапорці</span>. Варіанти: Смартфон / Ноутбук / Планшет / ПК. Необов'язкове.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: Розділ 2 у режимі редагування</div>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">1.4 — Питання 7: Сітка прапорців (соціальні мережі)</div>
+          <ol class="steps-list">
+            <li>Додайте питання: <em>«Як часто ви використовуєте соціальні мережі?»</em></li>
+            <li>Тип: <span class="ui-ref">Сітка прапорців</span> (Checkbox grid).</li>
+            <li>У полі <strong>Рядки</strong> введіть по одному: Instagram, TikTok, YouTube, Telegram, Facebook, X.</li>
+            <li>У полі <strong>Стовпці</strong> введіть: Щодня, Кілька разів на тиждень, Рідко.</li>
+            <li>За бажанням увімкніть <strong>«Обмежити по одній відповіді на рядок»</strong>.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: налаштування сітки прапорців</div>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">1.5 — Питання 8: Email з валідацією</div>
+          <ol class="steps-list">
+            <li>Додайте питання: <em>«Вкажіть ваш email для отримання результатів»</em>. Тип: <span class="ui-ref">Короткі відповіді</span>.</li>
+            <li>Натисніть три крапки <span class="ui-ref">⋮</span> → <span class="ui-ref">Перевірка відповіді</span>.</li>
+            <li>Оберіть: <strong>Текст → Електронна адреса</strong>. Система не прийме відповідь без символу @.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ДИЗАЙН ТА ПОШИРЕННЯ -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">2</div>
+      <div class="task-title-block">
+        <h2>Дизайн форми та поширення</h2>
+        <div class="task-desc">Оформлення анкети та отримання посилання</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Змінити тему форми: додати зображення заголовка та колір фону</li>
+          <li>Увімкнути індикатор виконання (Progress bar)</li>
+          <li>Отримати скорочене посилання та надіслати одногрупнику або заповнити форму самостійно 3–4 рази</li>
+        </ul>
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">2.1 — Оформлення теми</div>
+          <ol class="steps-list">
+            <li>У правому верхньому куті натисніть іконку <span class="ui-ref">🎨 Палітра</span> (Налаштувати тему).</li>
+            <li>Натисніть <span class="ui-ref">Вибрати зображення</span> у блоці Header — оберіть будь-яке тематичне зображення з бібліотеки або завантажте власне.</li>
+            <li>Змініть колір теми на той, що підходить до зображення.</li>
+          </ol>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">2.2 — Налаштування форми</div>
+          <ol class="steps-list">
+            <li>Перейдіть на вкладку <span class="ui-ref">Налаштування</span> (шестерня ⚙️).</li>
+            <li>Знайдіть опцію <strong>«Показувати індикатор виконання»</strong> та увімкніть її.</li>
+          </ol>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">2.3 — Отримання посилання та збір відповідей</div>
+          <ol class="steps-list">
+            <li>Натисніть кнопку <span class="ui-ref">Надіслати</span> у правому верхньому куті.</li>
+            <li>Перейдіть на вкладку <span class="ui-ref">🔗 Посилання</span>.</li>
+            <li>Поставте галочку <strong>«Скоротити URL-адресу»</strong> та скопіюйте посилання.</li>
+            <li>Надішліть посилання одногрупнику або заповніть форму самостійно 3–4 рази з різними відповідями.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: вікно «Надіслати» зі скороченим посиланням</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- АНАЛІЗ ВІДПОВІДЕЙ -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">3</div>
+      <div class="task-title-block">
+        <h2>Перегляд відповідей та інтеграція з Google Таблицями</h2>
+        <div class="task-desc">Автоматична діаграма та зв'язок із Sheets для подальшого аналізу</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Переглянути автоматичні діаграми у вкладці «Відповіді»</li>
+          <li>Зв'язати форму з Google Таблицями</li>
+        </ul>
+      </div>
+
+      <div class="note-box">
+        <strong>Примітка:</strong> Якщо у вас менше 3 відповідей — заповніть форму самостійно ще кілька разів перед виконанням цього етапу.
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">3.1 — Відповіді та зв'язок із Таблицями</div>
+          <ol class="steps-list">
+            <li>У формі перейдіть на вкладку <span class="ui-ref">Відповіді</span>.</li>
+            <li>Перегляньте автоматичні діаграми. Зробіть скріншот однієї з них.</li>
+            <li>Натисніть зелену іконку <span class="ui-ref">Зв'язати з Google Таблицями</span>.</li>
+            <li>Оберіть <strong>«Створити нову таблицю»</strong> → вона відкриється автоматично у папці на Диску.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: автоматична діаграма у вкладці «Відповіді»</div>
+          <div class="screenshot-tag">📸 Скріншот: Google Таблиця з відповідями</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗВІТ -->
+  <div class="report-section">
+    <h2>Подання звіту</h2>
+    <p class="report-intro">Перевірте звіт і здайте його через Google Classroom — у розділі <strong>Завдання №2</strong>.</p>
+    <table class="report-table">
+      <thead><tr><th style="width:5%">#</th><th>Вимоги до звіту</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1</strong></td><td>Документ названо <strong>Звіт 2 — Прізвище</strong> і збережено в папці <strong>Лабораторні</strong>.</td></tr>
+        <tr><td><strong>2</strong></td><td>Шапка документа містить: рядок «Студент(ка) 1 курсу», прізвище та ім'я, спеціальність, назву роботи.</td></tr>
+        <tr><td><strong>3</strong></td><td>Скріншоти вставлені під відповідними номерами: <strong>1.2 (розгалуження), 1.3 (Розділ 2), 1.4 (сітка), 2.3 (посилання), 3.1 (діаграма і таблиця)</strong>.</td></tr>
+        <tr><td><strong>4</strong></td><td>За потреби скористайтеся <strong>Теоретичними матеріалами</strong> у Google Класі або пошуковиком.</td></tr>
+        <tr><td><strong>5</strong></td><td>Здайте документ у Google Classroom: <strong>Завдання №2</strong> → <span style="background:rgba(255,255,255,0.15);border-radius:4px;padding:1px 7px;font-weight:700;">+ Додати або створити</span> → оберіть <strong>Звіт 2 — Прізвище</strong> → <span style="background:rgba(255,255,255,0.15);border-radius:4px;padding:1px 7px;font-weight:700;">Здати</span>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer>
+  Лабораторна робота №2 · Інформаційно-цифрові системи та технології · 2026–2027
+</footer>
+
+</body>
+</html>

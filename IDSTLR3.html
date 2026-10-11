@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Лабораторна робота №3 — Аналіз даних у Google Таблицях</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green-dark:   #2D4A1E;
+      --green-mid:    #4A7A2A;
+      --green-light:  #D6E8C4;
+      --yellow-warm:  #F5C842;
+      --yellow-pale:  #FFFBEA;
+      --brown-dark:   #3D2B00;
+      --brown-mid:    #7A5A1A;
+      --brown-light:  #C8A84B;
+      --cream:        #F7F2E4;
+      --card-bg:      #FDFAF2;
+      --step-bg:      #F0EDD8;
+      --text-main:    #2A2000;
+      --text-muted:   #5C4D1A;
+      --border:       #C8BB8A;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Nunito', sans-serif; background: var(--cream); color: var(--text-main); line-height: 1.75; font-size: 16px; }
+
+    header { background: var(--green-dark); color: #fff; padding: 48px 24px 40px; text-align: center; border-bottom: 5px solid var(--yellow-warm); }
+    header .eyebrow { font-size: 13px; font-weight: 700; letter-spacing: .12em; color: var(--yellow-warm); text-transform: uppercase; margin-bottom: 12px; }
+    header h1 { font-family: 'Playfair Display', serif; font-size: clamp(22px,4vw,36px); line-height: 1.25; margin: 0 auto 16px; max-width: 700px; }
+    header .subtitle { font-size: 15px; color: #c8e8a8; max-width: 580px; margin: 0 auto; }
+
+    main { max-width: 860px; margin: 0 auto; padding: 48px 24px 64px; }
+
+    .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px; }
+    .meta-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px 24px; }
+    .meta-card h3 { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 8px; }
+    .meta-card p { font-size: 15px; }
+
+    .scenario { background: var(--green-light); border-left: 4px solid var(--green-mid); border-radius: 0 8px 8px 0; padding: 20px 24px; margin-bottom: 16px; font-size: 15px; color: var(--green-dark); }
+
+    .before-start { background: var(--green-dark); border-radius: 10px; padding: 28px 32px; margin-bottom: 44px; color: #fff; }
+    .before-start h3 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--yellow-warm); margin-bottom: 6px; }
+    .before-start .before-intro { font-size: 14px; color: #c8e8a8; margin-bottom: 20px; }
+    .before-start ol { list-style: none; counter-reset: bc; display: flex; flex-direction: column; gap: 12px; }
+    .before-start ol li { counter-increment: bc; display: flex; gap: 14px; align-items: flex-start; font-size: 15px; line-height: 1.6; }
+    .before-start ol li::before { content: counter(bc); flex-shrink: 0; width: 26px; height: 26px; background: var(--yellow-warm); color: var(--brown-dark); border-radius: 50%; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 3px; }
+    .ui-ref-dark { background: rgba(255,255,255,0.15); border-radius: 4px; padding: 1px 7px; font-weight: 700; font-size: 13.5px; }
+
+    .task { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 36px; overflow: hidden; }
+    .task-header { display: flex; align-items: flex-start; gap: 20px; padding: 24px 28px; background: var(--yellow-pale); border-bottom: 1px solid var(--border); }
+    .task-num { flex-shrink: 0; width: 44px; height: 44px; background: var(--green-dark); color: #fff; font-family: 'Playfair Display', serif; font-size: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+    .task-title-block h2 { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--green-dark); line-height: 1.3; }
+    .task-title-block .task-desc { font-size: 14px; color: var(--text-muted); margin-top: 4px; font-style: italic; }
+    .task-body { padding: 24px 28px; }
+
+    .requirements { margin-bottom: 28px; }
+    .requirements h4 { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 12px; }
+    .requirements ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .requirements ul li { display: flex; gap: 10px; font-size: 15px; line-height: 1.6; }
+    .requirements ul li::before { content: '›'; color: var(--green-mid); font-weight: 700; font-size: 18px; line-height: 1.4; flex-shrink: 0; }
+
+    .steps-section h4 { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 16px; }
+    .steps-group { margin-bottom: 24px; }
+    .steps-group-title { font-size: 15px; font-weight: 700; color: var(--green-dark); background: var(--green-light); border-radius: 6px; padding: 8px 14px; margin-bottom: 12px; display: inline-block; }
+    .steps-list { list-style: none; counter-reset: sc; display: flex; flex-direction: column; gap: 10px; padding-left: 8px; }
+    .steps-list li { counter-increment: sc; display: flex; gap: 14px; align-items: flex-start; font-size: 15px; line-height: 1.65; }
+    .steps-list li::before { content: counter(sc); flex-shrink: 0; width: 26px; height: 26px; background: var(--brown-light); color: var(--brown-dark); border-radius: 50%; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 3px; }
+    .ui-ref { background: var(--step-bg); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; font-size: 13.5px; font-weight: 700; color: var(--green-dark); white-space: nowrap; }
+
+    .formula-box { background: #1e2d1e; border-radius: 8px; padding: 16px 20px; margin: 12px 0; font-family: 'Courier New', monospace; font-size: 14px; color: #a8d8a8; }
+    .formula-box .formula-label { font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--yellow-warm); margin-bottom: 8px; }
+    .formula-box .formula { color: #e8f4e8; font-size: 15px; }
+    .formula-box .formula-comment { color: #6a9a6a; font-size: 12px; margin-top: 4px; font-family: 'Nunito', sans-serif; font-style: italic; }
+
+    .note-box { background: var(--green-light); border-left: 4px solid var(--green-mid); border-radius: 0 6px 6px 0; padding: 14px 18px; margin: 16px 0; font-size: 14px; color: var(--green-dark); }
+    .note-box strong { font-weight: 700; }
+
+    .screenshot-tag { display: inline-block; background: var(--yellow-warm); color: var(--brown-dark); font-size: 12px; font-weight: 700; border-radius: 4px; padding: 2px 10px; margin-top: 10px; }
+
+    .section-divider { border: none; border-top: 2px dashed var(--border); margin: 28px 0; }
+
+    .summary-table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 16px 0; }
+    .summary-table thead tr { background: var(--green-dark); color: #fff; }
+    .summary-table thead th { padding: 10px 14px; text-align: left; font-weight: 700; }
+    .summary-table tbody tr:nth-child(odd)  { background: var(--card-bg); }
+    .summary-table tbody tr:nth-child(even) { background: var(--yellow-pale); }
+    .summary-table tbody td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .summary-table code { background: var(--step-bg); border-radius: 3px; padding: 1px 6px; font-size: 13px; font-family: 'Courier New', monospace; color: var(--green-dark); }
+
+    .report-section { background: var(--green-dark); color: #fff; border-radius: 10px; padding: 32px 32px 28px; margin-top: 8px; }
+    .report-section h2 { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--yellow-warm); margin-bottom: 6px; }
+    .report-section .report-intro { font-size: 14px; color: #c8e8a8; margin-bottom: 24px; }
+    .report-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .report-table thead tr { background: rgba(255,255,255,.12); }
+    .report-table thead th { padding: 10px 14px; text-align: left; font-weight: 700; color: var(--yellow-warm); border-bottom: 1px solid rgba(255,255,255,.2); }
+    .report-table tbody tr { border-bottom: 1px solid rgba(255,255,255,.1); }
+    .report-table tbody td { padding: 10px 14px; color: #eee; vertical-align: top; }
+
+    footer { text-align: center; font-size: 13px; color: var(--text-muted); padding: 24px; border-top: 1px solid var(--border); margin-top: 16px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Інформаційно-цифрові системи та технології</div>
+  <h1>Лабораторна робота №3<br>Аналіз даних у Google Таблицях</h1>
+  <p class="subtitle">Наскрізний кейс «Цифрові звички студента-першокурсника» — статистика, фільтри та візуалізація</p>
+</header>
+
+<main>
+
+  <div class="meta-grid">
+    <div class="meta-card">
+      <h3>Мета роботи</h3>
+      <p>Опанувати основні інструменти Google Таблиць: сортування, фільтри, статистичні функції та побудову діаграм для аналізу реальних даних опитування.</p>
+    </div>
+    <div class="meta-card">
+      <h3>Обладнання та ПЗ</h3>
+      <p>Комп'ютер з доступом до інтернету; веббраузер; корпоративний обліковий запис Google; файл <strong>Опитування_Цифрові_звички.xlsx</strong> з Google Classroom.</p>
+    </div>
+  </div>
+
+  <div class="scenario">
+    <strong>Наскрізний кейс:</strong> Ви зібрали відповіді анкети «Цифрові звички студента-першокурсника». Тепер потрібно перетворити сирі дані на переконливу статистику: знайти середні показники, виявити групи респондентів та побудувати діаграми для майбутньої презентації.
+  </div>
+
+  <!-- ПЕРЕД ПОЧАТКОМ -->
+  <div class="before-start">
+    <h3>⚑ Перед початком — підготуйте файл та документ звіту</h3>
+    <p class="before-intro">Спочатку завантажте файл з даними і створіть документ звіту.</p>
+    <ol>
+      <li>У Google Classroom завантажте файл <strong>Опитування_Цифрові_звички.xlsx</strong> із матеріалів до Завдання №3.</li>
+      <li>Відкрийте файл у Google Таблицях: після завантаження натисніть на нього на Диску правою кнопкою → <span class="ui-ref-dark">Відкрити за допомогою → Google Таблиці</span>. Файл збережеться у форматі Google Sheets.</li>
+      <li>Перемістіть файл у папку <strong>Інформаційно-цифрові_системи → Лабораторні</strong>.</li>
+      <li>На аркуші <strong>«Відповіді форми»</strong> перед початком зафіксуйте стан даних: меню <span class="ui-ref-dark">Файл → Історія версій → Назвати поточну версію</span> → введіть назву <strong>«Оригінальні дані»</strong>.</li>
+      <li>Перейдіть на аркуш <strong>«Аналітика»</strong> — всі подальші дії виконуйте тут. Скопіюйте туди всі дані з аркуша «Відповіді форми» (Ctrl+A → Ctrl+C → перейдіть на «Аналітика» → клікніть на A1 → Ctrl+V).</li>
+      <li>У папці <strong>Лабораторні</strong> створіть Google Документ <strong>Звіт 3 — Прізвище</strong>, оформіть шапку та залиште відкритим у окремій вкладці.</li>
+    </ol>
+  </div>
+
+  <!-- ЗАВДАННЯ 1 -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">1</div>
+      <div class="task-title-block">
+        <h2>Оформлення та підготовка даних</h2>
+        <div class="task-desc">Форматування заголовків і закріплення рядка</div>
+      </div>
+    </div>
+    <div class="task-body">
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Виділити заголовки жирним шрифтом і увімкнути перенесення тексту</li>
+          <li>Закріпити перший рядок, щоб він не зникав при прокрутці</li>
+          <li>Налаштувати автоматичний фільтр для всієї таблиці</li>
+        </ul>
+      </div>
+      <hr class="section-divider">
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+        <div class="steps-group">
+          <div class="steps-group-title">1.1 — Форматування заголовків</div>
+          <ol class="steps-list">
+            <li>На аркуші «Аналітика» клікніть на номер рядка <strong>1</strong> — виділиться весь перший рядок.</li>
+            <li>Натисніть <span class="ui-ref">Ж</span> (жирний, Ctrl+B). Потім у меню <span class="ui-ref">Формат → Перенесення тексту → Перенести</span> — довгі заголовки відображатимуться повністю.</li>
+            <li>Збільшіть висоту першого рядка: наведіть курсор між рядками 1 і 2 в нумерації зліва та потягніть вниз.</li>
+          </ol>
+        </div>
+        <div class="steps-group">
+          <div class="steps-group-title">1.2 — Закріплення рядка і фільтр</div>
+          <ol class="steps-list">
+            <li>Меню <span class="ui-ref">Вигляд → Закріпити → 1 рядок</span> — заголовок тепер завжди видно.</li>
+            <li>Виділіть усю таблицю (клікніть на комірку A1, потім Ctrl+Shift+End).</li>
+            <li>Меню <span class="ui-ref">Дані → Створити фільтр</span> — у заголовках з'являться стрілки фільтрації.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: таблиця з відформатованими заголовками та фільтром</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗАВДАННЯ 2 -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">2</div>
+      <div class="task-title-block">
+        <h2>Сортування та фільтрація даних</h2>
+        <div class="task-desc">Сегментація аудиторії для аналізу окремих груп</div>
+      </div>
+    </div>
+    <div class="task-body">
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Відсортувати таблицю за оцінкою впевненості у ПК (від меншого до більшого)</li>
+          <li>Відфільтрувати лише тих, хто проводить в інтернеті <strong>більше 4 год</strong></li>
+          <li>Зробити скріншот відфільтрованої таблиці та скасувати фільтр</li>
+          <li>Відфільтрувати за статтю — переглянути окрему групу</li>
+        </ul>
+      </div>
+      <hr class="section-divider">
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+        <div class="steps-group">
+          <div class="steps-group-title">2.1 — Сортування за оцінкою ПК</div>
+          <ol class="steps-list">
+            <li>Натисніть стрілку фільтра у стовпці <strong>«Впевненість у користуванні ПК (1–5)»</strong>.</li>
+            <li>Оберіть <span class="ui-ref">Сортувати від А до Я</span> — рядки впорядкуються від оцінки 1 до 5.</li>
+            <li>Зробіть скріншот відсортованої таблиці.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: таблиця після сортування</div>
+        </div>
+        <div class="steps-group">
+          <div class="steps-group-title">2.2 — Фільтр за часом в інтернеті</div>
+          <ol class="steps-list">
+            <li>Натисніть стрілку фільтра у стовпці <strong>«Скільки годин на день в інтернеті?»</strong>.</li>
+            <li>Зніміть галочки з усіх варіантів, залиште лише <strong>«більше 4 год»</strong>. Натисніть <span class="ui-ref">ОК</span>.</li>
+            <li>Зробіть скріншот — видно лише частину рядків.</li>
+            <li>Щоб скасувати фільтр: знову натисніть стрілку → <span class="ui-ref">Вибрати всі</span> → <span class="ui-ref">ОК</span>.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: таблиця з активним фільтром «більше 4 год»</div>
+        </div>
+        <div class="steps-group">
+          <div class="steps-group-title">2.3 — Фільтр за статтю</div>
+          <ol class="steps-list">
+            <li>Натисніть стрілку фільтра у стовпці <strong>«Стать»</strong>.</li>
+            <li>Залиште лише <strong>«Жінка»</strong> або <strong>«Чоловік»</strong> — на ваш вибір.</li>
+            <li>Зробіть скріншот відфільтрованої групи.</li>
+            <li>Скасуйте фільтр: <span class="ui-ref">Вибрати всі → ОК</span>.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: таблиця з фільтром за статтю</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗАВДАННЯ 3 -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">3</div>
+      <div class="task-title-block">
+        <h2>Статистичні розрахунки</h2>
+        <div class="task-desc">Функції COUNTA, AVERAGE, MAX, MIN, COUNTIF, IF</div>
+      </div>
+    </div>
+    <div class="task-body">
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Створити таблицю «Підсумки» під основними даними</li>
+          <li>Застосувати 6 функцій для аналізу результатів опитування</li>
+          <li>Додати стовпець «Категорія» з функцією IF</li>
+        </ul>
+      </div>
+
+      <div class="note-box">
+        <strong>Де розмістити підсумки:</strong> Пропустіть один порожній рядок після останнього рядка даних і починайте таблицю підсумків там. У прикладах нижче дані знаходяться у рядках 2–31 — якщо у вас інші рядки, скоригуйте формули відповідно.
+      </div>
+
+      <hr class="section-divider">
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">3.1 — Таблиця підсумків</div>
+          <ol class="steps-list">
+            <li>Клікніть на порожню комірку у стовпці A (через рядок після останнього запису). Введіть заголовок: <strong>Підсумки опитування</strong>. Зробіть його жирним.</li>
+            <li>У наступних рядках стовпця A вводьте назви показників, а у стовпці B — формули (дивіться нижче).</li>
+          </ol>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">3.2 — Функція COUNTA: кількість учасників</div>
+          <ol class="steps-list">
+            <li>У стовпці A введіть: <em>Кількість учасників</em>.</li>
+            <li>У стовпці B введіть формулу:</li>
+          </ol>
+          <div class="formula-box">
+            <div class="formula-label">Формула</div>
+            <div class="formula">=COUNTA(A2:A31)</div>
+            <div class="formula-comment">Рахує непорожні комірки у стовпці A (мітки часу) — тобто кількість відповідей</div>
+          </div>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">3.3 — Функції AVERAGE, MAX, MIN: аналіз оцінки ПК</div>
+          <ol class="steps-list">
+            <li>Знайдіть стовпець <strong>«Впевненість у користуванні ПК (1–5)»</strong> — припустімо, це стовпець D.</li>
+            <li>Додайте три рядки підсумків:</li>
+          </ol>
+          <div class="formula-box">
+            <div class="formula-label">Середній бал впевненості у ПК</div>
+            <div class="formula">=AVERAGE(D2:D31)</div>
+            <div class="formula-comment">Повертає середнє арифметичне — наприклад, 3.5</div>
+          </div>
+          <div class="formula-box">
+            <div class="formula-label">Найвища оцінка</div>
+            <div class="formula">=MAX(D2:D31)</div>
+            <div class="formula-comment">Максимальне значення у стовпці</div>
+          </div>
+          <div class="formula-box">
+            <div class="formula-label">Найнижча оцінка</div>
+            <div class="formula">=MIN(D2:D31)</div>
+            <div class="formula-comment">Мінімальне значення у стовпці</div>
+          </div>
+          <ol class="steps-list" style="margin-top:12px">
+            <li>Аналогічно додайте AVERAGE для стовпця <strong>«Вік»</strong> — це дасть середній вік учасників.</li>
+          </ol>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">3.4 — Функція COUNTIF: підрахунок за категорією</div>
+          <ol class="steps-list">
+            <li>Знайдіть стовпець <strong>«Скільки годин на день в інтернеті?»</strong> — припустімо, стовпець E.</li>
+            <li>Додайте три рядки підсумків — по одному для кожного варіанту:</li>
+          </ol>
+          <div class="formula-box">
+            <div class="formula-label">Кількість тих, хто в інтернеті до 2 год</div>
+            <div class="formula">=COUNTIF(E2:E31;"до 2 год")</div>
+            <div class="formula-comment">Рахує рядки, де значення точно відповідає тексту</div>
+          </div>
+          <div class="formula-box">
+            <div class="formula-label">Кількість тих, хто в інтернеті 2–4 год</div>
+            <div class="formula">=COUNTIF(E2:E31;"2–4 год")</div>
+          </div>
+          <div class="formula-box">
+            <div class="formula-label">Кількість тих, хто в інтернеті більше 4 год</div>
+            <div class="formula">=COUNTIF(E2:E31;"більше 4 год")</div>
+          </div>
+          <div class="screenshot-tag">📸 Скріншот: таблиця підсумків із формулами COUNTA, AVERAGE, MAX, MIN, COUNTIF</div>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">3.5 — Функція IF: категорія респондента</div>
+          <ol class="steps-list">
+            <li>Перейдіть до першого рядка даних (рядок 2). Знайдіть крайній правий порожній стовпець після всіх даних.</li>
+            <li>У заголовку (рядок 1) введіть: <strong>Категорія</strong>.</li>
+            <li>У рядку 2 введіть формулу (де D2 — оцінка впевненості у ПК):</li>
+          </ol>
+          <div class="formula-box">
+            <div class="formula-label">Формула IF</div>
+            <div class="formula">=IF(D2>=4;"Впевнений користувач";"Початківець")</div>
+            <div class="formula-comment">Якщо оцінка 4 або 5 — «Впевнений користувач», інакше — «Початківець»</div>
+          </div>
+          <ol class="steps-list" style="margin-top:12px">
+            <li>Протягніть формулу вниз на всі 30 рядків: клікніть на комірку з формулою → наведіть курсор на правий нижній кут комірки (з'явиться +) → потягніть вниз до останнього рядка.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: стовпець «Категорія» з результатами функції IF</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗАВДАННЯ 4 -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">4</div>
+      <div class="task-title-block">
+        <h2>Візуалізація результатів</h2>
+        <div class="task-desc">Побудова кругової та стовпчастої діаграм</div>
+      </div>
+    </div>
+    <div class="task-body">
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Побудувати <strong>кругову діаграму</strong> розподілу часу в інтернеті</li>
+          <li>Побудувати <strong>стовпчасту діаграму</strong> розподілу оцінок впевненості у ПК</li>
+          <li>Дати діаграмам зрозумілі назви</li>
+        </ul>
+      </div>
+      <hr class="section-divider">
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">4.1 — Підготовча зведена таблиця</div>
+          <ol class="steps-list">
+            <li>Поруч із таблицею підсумків створіть невелику зведену таблицю з трьох рядків на основі результатів COUNTIF із Завдання 3:</li>
+          </ol>
+          <div class="formula-box">
+            <div class="formula-label">Зведена таблиця для діаграми (приклад)</div>
+            <div class="formula">до 2 год       | =COUNTIF(E2:E31;"до 2 год")
+2–4 год        | =COUNTIF(E2:E31;"2–4 год")
+більше 4 год   | =COUNTIF(E2:E31;"більше 4 год")</div>
+            <div class="formula-comment">Перший стовпець — назви категорій, другий — кількість</div>
+          </div>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">4.2 — Кругова діаграма (час в інтернеті)</div>
+          <ol class="steps-list">
+            <li>Виділіть зведену таблицю з 4.1 разом із заголовками.</li>
+            <li>Меню <span class="ui-ref">Вставка → Діаграма</span>.</li>
+            <li>У редакторі діаграм у вкладці <span class="ui-ref">Налаштування</span> оберіть тип: <strong>Кругова діаграма</strong>.</li>
+            <li>Перейдіть на вкладку <span class="ui-ref">Налаштувати</span> → змініть заголовок на: <em>«Розподіл часу в інтернеті»</em>.</li>
+          </ol>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">4.3 — Стовпчаста діаграма (оцінки впевненості у ПК)</div>
+          <ol class="steps-list">
+            <li>Аналогічно створіть зведену таблицю для оцінок 1–5 за допомогою COUNTIF:</li>
+          </ol>
+          <div class="formula-box">
+            <div class="formula-label">Зведена таблиця оцінок</div>
+            <div class="formula">=COUNTIF(D2:D31;1)
+=COUNTIF(D2:D31;2)
+=COUNTIF(D2:D31;3)
+=COUNTIF(D2:D31;4)
+=COUNTIF(D2:D31;5)</div>
+            <div class="formula-comment">Підраховує скільки людей поставили кожну оцінку від 1 до 5</div>
+          </div>
+          <ol class="steps-list" style="margin-top:12px">
+            <li>Виділіть зведену таблицю → <span class="ui-ref">Вставка → Діаграма</span> → тип: <strong>Стовпчаста діаграма</strong>.</li>
+            <li>Змініть заголовок: <em>«Розподіл оцінок впевненості у користуванні ПК»</em>.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: аркуш з обома побудованими діаграмами</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗВІТ -->
+  <div class="report-section">
+    <h2>Подання звіту</h2>
+    <p class="report-intro">Перевірте звіт і здайте його через Google Classroom — у розділі <strong>Завдання №3</strong>.</p>
+    <table class="report-table">
+      <thead><tr><th style="width:5%">#</th><th>Вимоги до звіту</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1</strong></td><td>Документ названо <strong>Звіт 3 — Прізвище</strong> і збережено в папці <strong>Лабораторні</strong>.</td></tr>
+        <tr><td><strong>2</strong></td><td>Шапка документа містить: «Студент(ка) 1 курсу», прізвище та ім'я, спеціальність, назву роботи.</td></tr>
+        <tr><td><strong>3</strong></td><td>Скріншоти вставлені під відповідними номерами: <strong>1.2 (таблиця з фільтром), 2.1 (сортування), 2.2 (фільтр по інтернету), 2.3 (фільтр по статі), 3.4 (таблиця підсумків), 3.5 (стовпець IF), 4.3 (обидві діаграми)</strong>.</td></tr>
+        <tr><td><strong>4</strong></td><td>За потреби скористайтеся <strong>Теоретичними матеріалами</strong> у Google Класі або пошуковиком.</td></tr>
+        <tr><td><strong>5</strong></td><td>Здайте документ у Google Classroom: <strong>Завдання №3</strong> → <span style="background:rgba(255,255,255,0.15);border-radius:4px;padding:1px 7px;font-weight:700;">+ Додати або створити</span> → оберіть <strong>Звіт 3 — Прізвище</strong> → <span style="background:rgba(255,255,255,0.15);border-radius:4px;padding:1px 7px;font-weight:700;">Здати</span>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer>
+  Лабораторна робота №3 · Інформаційно-цифрові системи та технології · 2026–2027
+</footer>
+
+</body>
+</html>
