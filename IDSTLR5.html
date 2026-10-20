@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Лабораторна робота №5 — ШІ як асистент студента</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green-dark:   #2D4A1E;
+      --green-mid:    #4A7A2A;
+      --green-light:  #D6E8C4;
+      --yellow-warm:  #F5C842;
+      --yellow-pale:  #FFFBEA;
+      --brown-dark:   #3D2B00;
+      --brown-mid:    #7A5A1A;
+      --brown-light:  #C8A84B;
+      --cream:        #F7F2E4;
+      --card-bg:      #FDFAF2;
+      --step-bg:      #F0EDD8;
+      --text-main:    #2A2000;
+      --text-muted:   #5C4D1A;
+      --border:       #C8BB8A;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Nunito', sans-serif; background: var(--cream); color: var(--text-main); line-height: 1.75; font-size: 16px; }
+
+    header { background: var(--green-dark); color: #fff; padding: 48px 24px 40px; text-align: center; border-bottom: 5px solid var(--yellow-warm); }
+    header .eyebrow { font-size: 13px; font-weight: 700; letter-spacing: .12em; color: var(--yellow-warm); text-transform: uppercase; margin-bottom: 12px; }
+    header h1 { font-family: 'Playfair Display', serif; font-size: clamp(22px,4vw,36px); line-height: 1.25; margin: 0 auto 16px; max-width: 700px; }
+    header .subtitle { font-size: 15px; color: #c8e8a8; max-width: 580px; margin: 0 auto; }
+
+    main { max-width: 860px; margin: 0 auto; padding: 48px 24px 64px; }
+
+    .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px; }
+    .meta-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px 24px; }
+    .meta-card h3 { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 8px; }
+    .meta-card p { font-size: 15px; }
+
+    .scenario { background: var(--green-light); border-left: 4px solid var(--green-mid); border-radius: 0 8px 8px 0; padding: 20px 24px; margin-bottom: 16px; font-size: 15px; color: var(--green-dark); }
+
+    .before-start { background: var(--green-dark); border-radius: 10px; padding: 28px 32px; margin-bottom: 44px; color: #fff; }
+    .before-start h3 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--yellow-warm); margin-bottom: 6px; }
+    .before-start .before-intro { font-size: 14px; color: #c8e8a8; margin-bottom: 20px; }
+    .before-start ol { list-style: none; counter-reset: bc; display: flex; flex-direction: column; gap: 12px; }
+    .before-start ol li { counter-increment: bc; display: flex; gap: 14px; align-items: flex-start; font-size: 15px; line-height: 1.6; }
+    .before-start ol li::before { content: counter(bc); flex-shrink: 0; width: 26px; height: 26px; background: var(--yellow-warm); color: var(--brown-dark); border-radius: 50%; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 3px; }
+    .ui-ref-dark { background: rgba(255,255,255,0.15); border-radius: 4px; padding: 1px 7px; font-weight: 700; font-size: 13.5px; }
+
+    .task { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 36px; overflow: hidden; }
+    .task-header { display: flex; align-items: flex-start; gap: 20px; padding: 24px 28px; background: var(--yellow-pale); border-bottom: 1px solid var(--border); }
+    .task-num { flex-shrink: 0; width: 44px; height: 44px; background: var(--green-dark); color: #fff; font-family: 'Playfair Display', serif; font-size: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+    .task-title-block h2 { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--green-dark); line-height: 1.3; }
+    .task-title-block .task-desc { font-size: 14px; color: var(--text-muted); margin-top: 4px; font-style: italic; }
+    .task-body { padding: 24px 28px; }
+
+    .requirements { margin-bottom: 28px; }
+    .requirements h4 { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 12px; }
+    .requirements ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .requirements ul li { display: flex; gap: 10px; font-size: 15px; line-height: 1.6; }
+    .requirements ul li::before { content: '›'; color: var(--green-mid); font-weight: 700; font-size: 18px; line-height: 1.4; flex-shrink: 0; }
+
+    .steps-section h4 { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 16px; }
+    .steps-group { margin-bottom: 24px; }
+    .steps-group-title { font-size: 15px; font-weight: 700; color: var(--green-dark); background: var(--green-light); border-radius: 6px; padding: 8px 14px; margin-bottom: 12px; display: inline-block; }
+    .steps-list { list-style: none; counter-reset: sc; display: flex; flex-direction: column; gap: 10px; padding-left: 8px; }
+    .steps-list li { counter-increment: sc; display: flex; gap: 14px; align-items: flex-start; font-size: 15px; line-height: 1.65; }
+    .steps-list li::before { content: counter(sc); flex-shrink: 0; width: 26px; height: 26px; background: var(--brown-light); color: var(--brown-dark); border-radius: 50%; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 3px; }
+    .ui-ref { background: var(--step-bg); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; font-size: 13.5px; font-weight: 700; color: var(--green-dark); white-space: nowrap; }
+
+    .prompt-box { background: #1a1a2e; border-radius: 8px; padding: 20px 22px; margin: 14px 0; }
+    .prompt-box .prompt-label { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--yellow-warm); margin-bottom: 10px; font-family: 'Nunito', sans-serif; }
+    .prompt-box .prompt-text { font-family: 'Courier New', monospace; font-size: 13.5px; color: #e0e8ff; line-height: 1.8; white-space: pre-wrap; }
+    .prompt-box .prompt-var { color: #7dd3fc; font-style: italic; }
+    .prompt-box .prompt-comment { color: #6b7db3; font-size: 12px; margin-top: 10px; font-family: 'Nunito', sans-serif; font-style: italic; }
+
+    .note-box { background: var(--green-light); border-left: 4px solid var(--green-mid); border-radius: 0 6px 6px 0; padding: 14px 18px; margin: 16px 0; font-size: 14px; color: var(--green-dark); }
+    .note-box strong { font-weight: 700; }
+
+    .warn-box { background: #fff8e8; border-left: 4px solid var(--yellow-warm); border-radius: 0 6px 6px 0; padding: 14px 18px; margin: 16px 0; font-size: 14px; color: var(--brown-dark); }
+    .warn-box strong { font-weight: 700; }
+
+    .bonus-box { background: var(--yellow-pale); border: 2px dashed var(--brown-light); border-radius: 8px; padding: 16px 20px; margin: 20px 0; font-size: 14px; }
+    .bonus-box .bonus-label { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 8px; }
+
+    .screenshot-tag { display: inline-block; background: var(--yellow-warm); color: var(--brown-dark); font-size: 12px; font-weight: 700; border-radius: 4px; padding: 2px 10px; margin-top: 10px; }
+    .section-divider { border: none; border-top: 2px dashed var(--border); margin: 28px 0; }
+
+    .report-section { background: var(--green-dark); color: #fff; border-radius: 10px; padding: 32px 32px 28px; margin-top: 8px; }
+    .report-section h2 { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--yellow-warm); margin-bottom: 6px; }
+    .report-section .report-intro { font-size: 14px; color: #c8e8a8; margin-bottom: 24px; }
+    .report-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .report-table thead tr { background: rgba(255,255,255,.12); }
+    .report-table thead th { padding: 10px 14px; text-align: left; font-weight: 700; color: var(--yellow-warm); border-bottom: 1px solid rgba(255,255,255,.2); }
+    .report-table tbody tr { border-bottom: 1px solid rgba(255,255,255,.1); }
+    .report-table tbody td { padding: 10px 14px; color: #eee; vertical-align: top; }
+
+    footer { text-align: center; font-size: 13px; color: var(--text-muted); padding: 24px; border-top: 1px solid var(--border); margin-top: 16px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Інформаційно-цифрові системи та технології</div>
+  <h1>Лабораторна робота №5<br>ШІ як розумний асистент студента</h1>
+  <p class="subtitle">Наскрізний кейс «Цифрові звички» — промпт-інжиніринг, фактчекінг та мультимодальні можливості Google Gemini</p>
+</header>
+
+<main>
+
+  <div class="meta-grid">
+    <div class="meta-card">
+      <h3>Мета роботи</h3>
+      <p>Навчитися використовувати Google Gemini як аналітичного асистента: складати ефективні промпти, перевіряти достовірність відповідей і експортувати результати в Google Workspace.</p>
+    </div>
+    <div class="meta-card">
+      <h3>Обладнання та ПЗ</h3>
+      <p>Комп'ютер з доступом до інтернету; веббраузер Google Chrome; корпоративний обліковий запис Google; результати таблиці підсумків із Лабораторної роботи №3.</p>
+    </div>
+  </div>
+
+  <div class="scenario">
+    <strong>Наскрізний кейс:</strong> Ви зібрали та проаналізували дані опитування «Цифрові звички студента-першокурсника». Тепер — наступний крок: використати штучний інтелект як аналітичного помічника. Але не як інструмент для списування, а як професійний редактор, аналітик і критик. Сьогодні ви дізнаєтесь, де ШІ блискучий — і де він відверто бреше.
+  </div>
+
+  <!-- ПЕРЕД ПОЧАТКОМ -->
+  <div class="before-start">
+    <h3>⚑ Перед початком — підготуйте документ та дані</h3>
+    <p class="before-intro">Підготуйте звіт і відкрийте таблицю підсумків із Роботи №3 — вона знадобиться в Етапі 1.</p>
+    <ol>
+      <li>На Google Диску перейдіть у папку <strong>Інформаційно-цифрові_системи → Лабораторні</strong>.</li>
+      <li>Натисніть <span class="ui-ref-dark">+ Створити</span> → <span class="ui-ref-dark">Google Документи</span>. Назвіть документ: <strong>Звіт 5 — Прізвище</strong>.</li>
+      <li>Оформіть шапку: Студент(ка) 1 курсу / Прізвище Ім'я / Спеціальність 000 Назва / Лабораторна робота 5.</li>
+      <li>Відкрийте файл <strong>Опитування_Цифрові_звички</strong> (Sheets із Роботи №3) у окремій вкладці — скопіюйте звідти таблицю підсумків, вона знадобиться в Етапі 1.</li>
+      <li>Відкрийте <strong>gemini.google.com</strong> у новій вкладці та переконайтеся, що ви авторизовані.</li>
+    </ol>
+  </div>
+
+  <!-- ЗАВДАННЯ 1 -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">1</div>
+      <div class="task-title-block">
+        <h2>Аналіз даних опитування (Рольовий промпт)</h2>
+        <div class="task-desc">Змусити ШІ мислити покроково та видати результат у заданому форматі</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Попросити Gemini проаналізувати результати вашого опитування з Роботи №3</li>
+          <li>Задати чіткі обмеження формату відповіді — лише таблиця, без зайвого тексту</li>
+          <li>Якщо ШІ порушив обмеження — виправити його</li>
+        </ul>
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">1.1 — Рольовий промпт із даними опитування</div>
+          <ol class="steps-list">
+            <li>Відкрийте чат Gemini та вставте наведений нижче промпт. Замість <em>[дані]</em> вставте таблицю підсумків із вашої Роботи №3 (скопіюйте комірки з аркуша «Аналітика»).</li>
+          </ol>
+
+          <div class="prompt-box">
+            <div class="prompt-label">Промпт — вставте у Gemini</div>
+            <div class="prompt-text">Дій як експерт з аналізу даних.
+Я провів(ла) опитування «Цифрові звички студента-першокурсника».
+Ось підсумкові дані:
+
+<span class="prompt-var">[вставте сюди таблицю підсумків із Роботи №3]</span>
+
+Крок 1: Визнач 2-3 головні закономірності, які видно з цих даних.
+Крок 2: Сформулюй один практичний висновок для університету.
+
+Обмеження: Не пиши жодних вступних чи прощальних фраз.
+Відповідь надай виключно у вигляді таблиці з колонками:
+«Закономірність» | «Що це означає» | «Рекомендація»</div>
+            <div class="prompt-comment">Якщо Gemini написав текст до або після таблиці — напишіть: «Ти порушив обмеження. Виведи ТІЛЬКИ таблицю»</div>
+          </div>
+
+          <ol class="steps-list">
+            <li>Перевірте відповідь: чи дотримано формат таблиці, чи немає зайвих абзаців.</li>
+            <li>Якщо є порушення — напишіть виправлення і отримайте виправлену відповідь.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: ваш промпт і відповідь Gemini у вигляді таблиці</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗАВДАННЯ 2 -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">2</div>
+      <div class="task-title-block">
+        <h2>Аналіз тексту за зразком (Few-Shot Prompting)</h2>
+        <div class="task-desc">Навчити ШІ працювати за власним шаблоном</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Знайти складний текст за вашою спеціальністю (новина, стаття, уривок закону)</li>
+          <li>Скласти промпт із прикладом-зразком того, як саме треба аналізувати</li>
+          <li>Перевірити, чи Gemini точно дотримався вашої структури</li>
+        </ul>
+      </div>
+
+      <div class="note-box">
+        <strong>Few-Shot Prompting</strong> — техніка, коли ви показуєте ШІ приклад бажаного результату перед тим, як дати реальне завдання. Це значно підвищує точність відповіді.
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">2.1 — Пошук тексту та промпт із зразком</div>
+          <ol class="steps-list">
+            <li>Знайдіть у Вікіпедії, на новинному сайті або в офіційному документі великий абзац тексту, пов'язаний із вашою спеціальністю або університетським життям. Скопіюйте його.</li>
+            <li>Вставте у Gemini наведений нижче промпт, підставивши ваш текст у кінці.</li>
+          </ol>
+
+          <div class="prompt-box">
+            <div class="prompt-label">Промпт — вставте у Gemini</div>
+            <div class="prompt-text">Я дам тобі складний текст. Зроби з нього коротку вижимку за чітким шаблоном.
+
+Ось приклад того, як ти маєш відповідати:
+
+- Головна думка: [Одне речення].
+- Ключові терміни: [3–5 слів через кому].
+- Цільова аудиторія: [Кому це цікаво].
+
+Тепер проаналізуй цей текст за таким самим шаблоном:
+
+<span class="prompt-var">[вставте ваш скопійований текст]</span></div>
+            <div class="prompt-comment">Порівняйте структуру відповіді зі своїм прикладом — чи збіглись усі три пункти?</div>
+          </div>
+
+          <div class="screenshot-tag">📸 Скріншот: промпт із прикладом і відповідь Gemini із точним дотриманням структури</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗАВДАННЯ 3 -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">3</div>
+      <div class="task-title-block">
+        <h2>Фактчекінг та виявлення ШІ-галюцинацій</h2>
+        <div class="task-desc">Спровокувати ШІ на вигадку — і самостійно її викрити</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Попросити Gemini скласти список наукових книг за вашою спеціальністю</li>
+          <li>Перевірити одну з книг через Google Search</li>
+          <li>Написати текстовий висновок про ризики ШІ-галюцинацій</li>
+        </ul>
+      </div>
+
+      <div class="warn-box">
+        <strong>Чому це важливо:</strong> ШІ часто вигадує книги, авторів і статистику, яких не існує. Цю властивість називають «галюцинацією». Якщо довіряти таким даним без перевірки — можна підставити себе в науковій роботі.
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">3.1 — Запит на список літератури</div>
+          <ol class="steps-list">
+            <li>Вставте у Gemini наведений промпт, підставивши свою спеціальність.</li>
+          </ol>
+
+          <div class="prompt-box">
+            <div class="prompt-label">Промпт — вставте у Gemini</div>
+            <div class="prompt-text">Напиши мені список із 3 підручників або монографій українських авторів,
+виданих після 2020 року, які стосуються теми <span class="prompt-var">[ваша спеціальність]</span>.
+Вкажи: автор, точна назва книги, видавництво та рік видання.</div>
+          </div>
+
+          <div class="screenshot-tag">📸 Скріншот: відповідь Gemini зі списком книг</div>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">3.2 — Перевірка через Google Search</div>
+          <ol class="steps-list">
+            <li>Оберіть одну книгу зі списку. Скопіюйте її назву та автора.</li>
+            <li>Відкрийте <strong>google.com</strong> та введіть пошуковий запит у лапках — для пошуку точного збігу:</li>
+          </ol>
+
+          <div class="prompt-box">
+            <div class="prompt-label">Пошуковий запит у Google</div>
+            <div class="prompt-text">"<span class="prompt-var">Точна назва книги</span>" "<span class="prompt-var">Прізвище автора</span>"</div>
+            <div class="prompt-comment">Лапки змушують Google шукати точний збіг — якщо книга вигадана, результатів не буде або з'являться нерелевантні сайти</div>
+          </div>
+
+          <ol class="steps-list">
+            <li>Зробіть скріншот сторінки результатів.</li>
+            <li>У документі звіту під скріншотом напишіть текстовий висновок (1–2 речення): поясніть своїми словами, чому небезпечно просити ШІ написати список літератури для самостійної роботи.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: результати Google Search (підтвердження або спростування)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗАВДАННЯ 4 -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">4</div>
+      <div class="task-title-block">
+        <h2>ШІ-редактор: стилістичне виправлення тексту</h2>
+        <div class="task-desc">Використати ШІ не як автора, а як помічника для покращення власного тексту</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Написати 2–3 речення про враження від навчання навмисно «поганою» мовою</li>
+          <li>Попросити Gemini переписати текст академічним стилем та пояснити кожну зміну</li>
+        </ul>
+      </div>
+
+      <div class="note-box">
+        <strong>Важливо:</strong> Текст-чернетку ви пишете самостійно — це не списування. ШІ лише допомагає його покращити, як це роблять редактори у видавництвах і наукових журналах.
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">4.1 — Написати чернетку та запустити редагування</div>
+          <ol class="steps-list">
+            <li>Напишіть 2–3 речення про своє навчання в університеті. Навмисно зробіть текст «поганим»: використайте сленг, русизми, повтори слів.</li>
+          </ol>
+
+          <div class="prompt-box">
+            <div class="prompt-label">Приклад «поганого» тексту (замініть своїм)</div>
+            <div class="prompt-text"><span class="prompt-var">«Ми вчимося на першому курсі і це дуже круто, але пар куча і преподи задають багато домашки, так що доводиться сидіти до ночі і вчити все це.»</span></div>
+          </div>
+
+          <ol class="steps-list">
+            <li>Вставте у Gemini наведений промпт, підставивши свій текст у кінці.</li>
+          </ol>
+
+          <div class="prompt-box">
+            <div class="prompt-label">Промпт — вставте у Gemini</div>
+            <div class="prompt-text">Виконай роль професійного редактора.
+Перепиши мій чорновий текст офіційно-діловим (академічним) стилем.
+Виправ усі помилки, русизми та сленг, але збережи загальний зміст.
+Після виправленого тексту напиши маркований список:
+поясни, які саме слова ти замінив і чому.
+
+Мій текст: <span class="prompt-var">[вставте свою чернетку]</span></div>
+          </div>
+
+          <ol class="steps-list">
+            <li>Перегляньте пояснення змін — чи всі зауваження справедливі?</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: промпт із вашим текстом і відповідь Gemini (виправлений варіант + список змін)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗАВДАННЯ 5 -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">5</div>
+      <div class="task-title-block">
+        <h2>Організація простору та експорт у Google Docs</h2>
+        <div class="task-desc">Перейменування чату, перевірка фактів і збереження результатів</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Перейменувати і закріпити поточний чат у Gemini</li>
+          <li>Перевірити достовірність відповіді через Google Search</li>
+          <li>Експортувати результат у Google Документи</li>
+        </ul>
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">5.1 — Перейменування та закріплення чату</div>
+          <ol class="steps-list">
+            <li>На лівій бічній панелі Gemini знайдіть поточний чат.</li>
+            <li>Натисніть три крапки <span class="ui-ref">⋮</span> → <span class="ui-ref">Перейменувати</span> → введіть назву: <strong>Лабораторна 5 — Прізвище</strong>.</li>
+            <li>Знову три крапки → <span class="ui-ref">Закріпити</span> — чат переміститься нагору панелі.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: ліва панель із закріпленим і перейменованим чатом</div>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">5.2 — Перевірка факту через Google Search</div>
+          <ol class="steps-list">
+            <li>Оберіть будь-який конкретний факт або цифру з відповіді Gemini в цьому чаті — наприклад, статистику або твердження.</li>
+            <li>Скопіюйте цей факт і вставте його в пошуковий рядок Google у лапках.</li>
+            <li>Знайдіть надійне джерело, яке підтверджує або спростовує цей факт.</li>
+            <li>У звіті під скріншотом напишіть одне речення: що ви знайшли і чи підтвердився факт.</li>
+          </ol>
+          <div class="note-box">
+            <strong>Чому не кнопка «Перевірити відповідь»:</strong> Вбудована функція перевірки в Gemini може бути недоступна у вашому акаунті або показувати різні результати. Перевірка через Google — надійніший і універсальніший метод, який працює завжди.
+          </div>
+          <div class="screenshot-tag">📸 Скріншот: результати Google з підтвердженням або спростуванням факту</div>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">5.3 — Експорт у Google Документи</div>
+          <ol class="steps-list">
+            <li>Знайдіть відповідь Gemini, яку хочете зберегти (наприклад, таблицю з Етапу 1).</li>
+            <li>Під відповіддю натисніть іконку з трьома крапками <span class="ui-ref">⋮</span> → <span class="ui-ref">Експортувати в Документи</span>.</li>
+            <li>Натисніть на посилання <span class="ui-ref">Відкрити документ</span> — Google автоматично створить файл на вашому Диску.</li>
+            <li>Перевірте, чи правильно відображається вміст у документі.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: відкритий Google Документ з експортованим вмістом</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗАВДАННЯ 6 -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">6</div>
+      <div class="task-title-block">
+        <h2>Мультимодальні можливості Gemini</h2>
+        <div class="task-desc">Аналіз завантаженого файлу та (за наявності) Canvas і генерація зображень</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Завантажити зображення або PDF у Gemini та попросити його проаналізувати</li>
+          <li>Перевірити наявність Canvas у вашому акаунті</li>
+        </ul>
+      </div>
+
+      <div class="note-box">
+        <strong>Мультимодальність</strong> — здатність ШІ працювати не лише з текстом, а й із зображеннями, PDF та іншими форматами. Це стабільна функція Gemini, доступна в усіх акаунтах.
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">6.1 — Аналіз зображення або PDF</div>
+          <ol class="steps-list">
+            <li>Знайдіть будь-яке зображення (діаграму, схему, таблицю) або PDF-файл, пов'язаний із вашою спеціальністю або результатами опитування. Збережіть на комп'ютер.</li>
+            <li>У новому чаті Gemini натисніть іконку <span class="ui-ref">📎 Прикріпити файл</span> (скріпка або «+» поруч із полем введення) та завантажте файл.</li>
+            <li>Вставте промпт:</li>
+          </ol>
+
+          <div class="prompt-box">
+            <div class="prompt-label">Промпт для аналізу файлу</div>
+            <div class="prompt-text">Проаналізуй це зображення (або документ).
+Дай відповідь у форматі:
+- Що зображено: [1 речення]
+- Головний висновок: [1 речення]
+- Що варто перевірити додатково: [1 питання]</div>
+          </div>
+
+          <ol class="steps-list">
+            <li>Перегляньте відповідь — чи правильно Gemini зрозумів вміст файлу?</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: завантажений файл у Gemini та відповідь у заданому форматі</div>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">6.2 — Canvas (Полотно)</div>
+          <ol class="steps-list">
+            <li>Натисніть кнопку <span class="ui-ref">+</span> або <span class="ui-ref">Інструменти</span> поруч із полем введення.</li>
+            <li>Якщо в меню є пункт <span class="ui-ref">Canvas</span> або <span class="ui-ref">Полотно</span> — оберіть його.</li>
+            <li>Напишіть: <em>«Напиши коротке привітання для презентації про <strong>[ваша спеціальність]</strong>»</em>. Текст відкриється в окремому робочому просторі праворуч, де його можна редагувати вручну.</li>
+          </ol>
+
+          <div class="warn-box">
+            <strong>Canvas недоступний?</strong> Ця функція є не у всіх акаунтах — залежить від налаштувань адміністратора. Якщо пункту немає в меню — виконайте той самий запит у звичайному чаті та зробіть скріншот результату.
+          </div>
+          <div class="screenshot-tag">📸 Скріншот: середовище Canvas з текстом (або звичайний чат, якщо Canvas недоступний)</div>
+        </div>
+
+        <div class="bonus-box">
+          <div class="bonus-label">⭐ Бонусне завдання — Генерація зображення</div>
+          Якщо у вашому акаунті доступна генерація зображень — знайдіть у меню «Інструменти» пункт <strong>«Створити зображення»</strong> та сформулюйте детальний промпт для титульного слайда вашої презентації. Наприклад: <em>«Згенеруй фотореалістичне зображення сучасного студента-[спеціальність], який працює за ноутбуком у світлій аудиторії»</em>. Вставте результат у звіт.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗВІТ -->
+  <div class="report-section">
+    <h2>Подання звіту</h2>
+    <p class="report-intro">Перевірте звіт і здайте його через Google Classroom — у розділі <strong>Завдання №5</strong>.</p>
+    <table class="report-table">
+      <thead><tr><th style="width:5%">#</th><th>Вимоги до звіту</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1</strong></td><td>Документ названо <strong>Звіт 5 — Прізвище</strong>, збережено в папці <strong>Лабораторні</strong>.</td></tr>
+        <tr><td><strong>2</strong></td><td>Шапка документа: «Студент(ка) 1 курсу», прізвище та ім'я, спеціальність, назва роботи.</td></tr>
+        <tr><td><strong>3</strong></td><td>Скріншоти під відповідними номерами: <strong>1.1 (таблиця Gemini), 2.1 (few-shot відповідь), 3.1 (список книг), 3.2 (Google Search), 4.1 (редагування тексту), 5.1 (закріплений чат), 5.2 (перевірка факту), 5.3 (експортований документ), 6.1 (аналіз файлу), 6.2 (Canvas або чат)</strong>.</td></tr>
+        <tr><td><strong>4</strong></td><td>Текстові висновки вставлені: після Етапу 3.2 — чому небезпечно довіряти ШІ у списку літератури; після Етапу 5.2 — чи підтвердився перевірений факт.</td></tr>
+        <tr><td><strong>5</strong></td><td>Здайте документ у Google Classroom: <strong>Завдання №5</strong> → <span style="background:rgba(255,255,255,0.15);border-radius:4px;padding:1px 7px;font-weight:700;">+ Додати або створити</span> → оберіть <strong>Звіт 5 — Прізвище</strong> → <span style="background:rgba(255,255,255,0.15);border-radius:4px;padding:1px 7px;font-weight:700;">Здати</span>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer>
+  Лабораторна робота №5 · Інформаційно-цифрові системи та технології · 2026–2027
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Лабораторна робота №4 — Академічний пошук</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green-dark:   #2D4A1E;
+      --green-mid:    #4A7A2A;
+      --green-light:  #D6E8C4;
+      --yellow-warm:  #F5C842;
+      --yellow-pale:  #FFFBEA;
+      --brown-dark:   #3D2B00;
+      --brown-mid:    #7A5A1A;
+      --brown-light:  #C8A84B;
+      --cream:        #F7F2E4;
+      --card-bg:      #FDFAF2;
+      --step-bg:      #F0EDD8;
+      --text-main:    #2A2000;
+      --text-muted:   #5C4D1A;
+      --border:       #C8BB8A;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Nunito', sans-serif; background: var(--cream); color: var(--text-main); line-height: 1.75; font-size: 16px; }
+
+    header { background: var(--green-dark); color: #fff; padding: 48px 24px 40px; text-align: center; border-bottom: 5px solid var(--yellow-warm); }
+    header .eyebrow { font-size: 13px; font-weight: 700; letter-spacing: .12em; color: var(--yellow-warm); text-transform: uppercase; margin-bottom: 12px; }
+    header h1 { font-family: 'Playfair Display', serif; font-size: clamp(22px,4vw,36px); line-height: 1.25; margin: 0 auto 16px; max-width: 700px; }
+    header .subtitle { font-size: 15px; color: #c8e8a8; max-width: 580px; margin: 0 auto; }
+
+    main { max-width: 860px; margin: 0 auto; padding: 48px 24px 64px; }
+
+    .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px; }
+    .meta-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px 24px; }
+    .meta-card h3 { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 8px; }
+    .meta-card p { font-size: 15px; }
+
+    .scenario { background: var(--green-light); border-left: 4px solid var(--green-mid); border-radius: 0 8px 8px 0; padding: 20px 24px; margin-bottom: 16px; font-size: 15px; color: var(--green-dark); }
+
+    .before-start { background: var(--green-dark); border-radius: 10px; padding: 28px 32px; margin-bottom: 44px; color: #fff; }
+    .before-start h3 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--yellow-warm); margin-bottom: 6px; }
+    .before-start .before-intro { font-size: 14px; color: #c8e8a8; margin-bottom: 20px; }
+    .before-start ol { list-style: none; counter-reset: bc; display: flex; flex-direction: column; gap: 12px; }
+    .before-start ol li { counter-increment: bc; display: flex; gap: 14px; align-items: flex-start; font-size: 15px; line-height: 1.6; }
+    .before-start ol li::before { content: counter(bc); flex-shrink: 0; width: 26px; height: 26px; background: var(--yellow-warm); color: var(--brown-dark); border-radius: 50%; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 3px; }
+    .ui-ref-dark { background: rgba(255,255,255,0.15); border-radius: 4px; padding: 1px 7px; font-weight: 700; font-size: 13.5px; }
+
+    .task { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 36px; overflow: hidden; }
+    .task-header { display: flex; align-items: flex-start; gap: 20px; padding: 24px 28px; background: var(--yellow-pale); border-bottom: 1px solid var(--border); }
+    .task-num { flex-shrink: 0; width: 44px; height: 44px; background: var(--green-dark); color: #fff; font-family: 'Playfair Display', serif; font-size: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+    .task-title-block h2 { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--green-dark); line-height: 1.3; }
+    .task-title-block .task-desc { font-size: 14px; color: var(--text-muted); margin-top: 4px; font-style: italic; }
+    .task-body { padding: 24px 28px; }
+
+    .requirements { margin-bottom: 28px; }
+    .requirements h4 { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 12px; }
+    .requirements ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .requirements ul li { display: flex; gap: 10px; font-size: 15px; line-height: 1.6; }
+    .requirements ul li::before { content: '›'; color: var(--green-mid); font-weight: 700; font-size: 18px; line-height: 1.4; flex-shrink: 0; }
+
+    .steps-section h4 { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 16px; }
+    .steps-group { margin-bottom: 24px; }
+    .steps-group-title { font-size: 15px; font-weight: 700; color: var(--green-dark); background: var(--green-light); border-radius: 6px; padding: 8px 14px; margin-bottom: 12px; display: inline-block; }
+    .steps-list { list-style: none; counter-reset: sc; display: flex; flex-direction: column; gap: 10px; padding-left: 8px; }
+    .steps-list li { counter-increment: sc; display: flex; gap: 14px; align-items: flex-start; font-size: 15px; line-height: 1.65; }
+    .steps-list li::before { content: counter(sc); flex-shrink: 0; width: 26px; height: 26px; background: var(--brown-light); color: var(--brown-dark); border-radius: 50%; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 3px; }
+    .ui-ref { background: var(--step-bg); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; font-size: 13.5px; font-weight: 700; color: var(--green-dark); white-space: nowrap; }
+
+    .operator-box { background: #1e2d1e; border-radius: 8px; padding: 16px 20px; margin: 12px 0; font-family: 'Courier New', monospace; font-size: 14px; }
+    .operator-box .op-label { font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--yellow-warm); margin-bottom: 8px; }
+    .operator-box .op-query { color: #e8f4e8; font-size: 15px; }
+    .operator-box .op-comment { color: #6a9a6a; font-size: 12px; margin-top: 6px; font-family: 'Nunito', sans-serif; font-style: italic; }
+
+    .note-box { background: var(--green-light); border-left: 4px solid var(--green-mid); border-radius: 0 6px 6px 0; padding: 14px 18px; margin: 16px 0; font-size: 14px; color: var(--green-dark); }
+    .note-box strong { font-weight: 700; }
+
+    .bonus-box { background: var(--yellow-pale); border: 2px dashed var(--brown-light); border-radius: 8px; padding: 16px 20px; margin: 20px 0; font-size: 14px; }
+    .bonus-box .bonus-label { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 8px; }
+
+    .screenshot-tag { display: inline-block; background: var(--yellow-warm); color: var(--brown-dark); font-size: 12px; font-weight: 700; border-radius: 4px; padding: 2px 10px; margin-top: 10px; }
+
+    .section-divider { border: none; border-top: 2px dashed var(--border); margin: 28px 0; }
+
+    .report-section { background: var(--green-dark); color: #fff; border-radius: 10px; padding: 32px 32px 28px; margin-top: 8px; }
+    .report-section h2 { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--yellow-warm); margin-bottom: 6px; }
+    .report-section .report-intro { font-size: 14px; color: #c8e8a8; margin-bottom: 24px; }
+    .report-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .report-table thead tr { background: rgba(255,255,255,.12); }
+    .report-table thead th { padding: 10px 14px; text-align: left; font-weight: 700; color: var(--yellow-warm); border-bottom: 1px solid rgba(255,255,255,.2); }
+    .report-table tbody tr { border-bottom: 1px solid rgba(255,255,255,.1); }
+    .report-table tbody td { padding: 10px 14px; color: #eee; vertical-align: top; }
+
+    footer { text-align: center; font-size: 13px; color: var(--text-muted); padding: 24px; border-top: 1px solid var(--border); margin-top: 16px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Інформаційно-цифрові системи та технології</div>
+  <h1>Лабораторна робота №4<br>Академічний пошук інформації</h1>
+  <p class="subtitle">Наскрізний кейс «Цифрові звички студента» — розширений пошук, Google Scholar та оформлення джерел</p>
+</header>
+
+<main>
+
+  <div class="meta-grid">
+    <div class="meta-card">
+      <h3>Мета роботи</h3>
+      <p>Опанувати інструменти розширеного пошуку в Google, навчитися знаходити наукові джерела через Google Академію та правильно їх цитувати.</p>
+    </div>
+    <div class="meta-card">
+      <h3>Обладнання та ПЗ</h3>
+      <p>Комп'ютер з доступом до інтернету; веббраузер Google Chrome; корпоративний обліковий запис Google.</p>
+    </div>
+  </div>
+
+  <div class="scenario">
+    <strong>Наскрізний кейс:</strong> У роботі №3 ви проаналізували дані опитування і з'ясували, наприклад, що більшість студентів проводять в інтернеті понад 4 години на день. Щоб перетворити ці результати на повноцінне дослідження, потрібна теоретична база. Ваше завдання — знайти наукові джерела, які підтверджують або доповнюють ваші дані, та правильно їх оформити.
+  </div>
+
+  <!-- ПЕРЕД ПОЧАТКОМ -->
+  <div class="before-start">
+    <h3>⚑ Перед початком — створіть документ звіту</h3>
+    <p class="before-intro">Спочатку підготуйте документ звіту, який залишатиметься відкритим протягом усього заняття.</p>
+    <ol>
+      <li>На Google Диску перейдіть у папку <strong>Інформаційно-цифрові_системи → Лабораторні</strong>.</li>
+      <li>Натисніть <span class="ui-ref-dark">+ Створити</span> → <span class="ui-ref-dark">Google Документи</span>. Назвіть документ: <strong>Звіт 4 — Прізвище</strong>.</li>
+      <li>Оформіть шапку: Студент(ка) 1 курсу / Прізвище Ім'я / Спеціальність 000 Назва / Лабораторна робота 4.</li>
+      <li>Залиште документ відкритим у окремій вкладці — після кожного етапу вставляйте скріншот.</li>
+    </ol>
+  </div>
+
+  <!-- ЗАВДАННЯ 1 -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">1</div>
+      <div class="task-title-block">
+        <h2>Розширений пошук у Google</h2>
+        <div class="task-desc">Фільтрація інформаційного шуму за допомогою операторів пошуку</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Сформулювати пошуковий запит, пов'язаний із результатами вашого опитування</li>
+          <li>Застосувати оператор <strong>filetype:pdf</strong> — знайти лише документи у форматі PDF</li>
+          <li>Застосувати оператор <strong>site:</strong> — знайти лише результати з освітніх або урядових сайтів</li>
+        </ul>
+      </div>
+
+      <div class="note-box">
+        <strong>Тема для пошуку:</strong> Використайте результати свого опитування як відправну точку. Наприклад: якщо більшість респондентів проводять в інтернеті понад 4 год — шукайте дані про цифрову залежність студентів. Якщо більшість використовують смартфон для навчання — шукайте про мобільне навчання.
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">1.1 — Оператор filetype:pdf</div>
+          <ol class="steps-list">
+            <li>Відкрийте <strong>google.com</strong> у браузері.</li>
+            <li>Сформулюйте запит за вашою темою та додайте до нього оператор <strong>filetype:pdf</strong> (без пробілу після двокрапки).</li>
+          </ol>
+          <div class="operator-box">
+            <div class="op-label">Приклади запитів</div>
+            <div class="op-query">цифрова компетентність студентів filetype:pdf</div>
+            <div class="op-comment">або</div>
+            <div class="op-query">використання смартфонів у навчанні filetype:pdf</div>
+            <div class="op-comment">Всі результати матимуть позначку [PDF] — це файли, придатні для наукового посилання</div>
+          </div>
+          <ol class="steps-list">
+            <li>Переконайтеся, що результати мають позначку <strong>[PDF]</strong>. Відкрийте один із них і переконайтеся, що це справді документ.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: сторінка результатів із оператором filetype:pdf у рядку пошуку</div>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">1.2 — Оператор site:</div>
+          <ol class="steps-list">
+            <li>У новому пошуку використайте той самий запит, але замість filetype:pdf додайте <strong>site:.edu.ua</strong> або <strong>site:.gov.ua</strong>.</li>
+          </ol>
+          <div class="operator-box">
+            <div class="op-label">Приклади запитів</div>
+            <div class="op-query">цифрові звички молоді site:.edu.ua</div>
+            <div class="op-comment">або</div>
+            <div class="op-query">інтернет залежність студентів site:.gov.ua</div>
+            <div class="op-comment">Результати будуть лише з університетських або урядових сайтів України</div>
+          </div>
+          <ol class="steps-list">
+            <li>Перевірте адреси знайдених сайтів — вони мають закінчуватися на <strong>.edu.ua</strong> або <strong>.gov.ua</strong>.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: результати з оператором site: у рядку пошуку</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗАВДАННЯ 2 -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">2</div>
+      <div class="task-title-block">
+        <h2>Зворотний пошук зображень (Google Lens)</h2>
+        <div class="task-desc">Пошук першоджерела для діаграми або схеми</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Знайти в інтернеті діаграму або схему за темою вашого опитування</li>
+          <li>Використати Google Lens для пошуку першоджерела зображення</li>
+        </ul>
+      </div>
+
+      <div class="note-box">
+        <strong>Навіщо це потрібно:</strong> У наукових роботах не можна використовувати зображення без посилання на джерело. Google Lens дозволяє знайти сайт, де вперше з'явилась діаграма або фото.
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">2.1 — Пошук і завантаження зображення</div>
+          <ol class="steps-list">
+            <li>У звичайному Google Пошуку перейдіть на вкладку <span class="ui-ref">Зображення</span>.</li>
+            <li>Введіть запит: наприклад, <em>«використання соціальних мереж молоддю діаграма»</em>.</li>
+            <li>Знайдіть будь-яку діаграму або схему, яка вас зацікавила, та збережіть її на комп'ютер (права кнопка миші → <span class="ui-ref">Зберегти зображення як</span>).</li>
+          </ol>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">2.2 — Зворотний пошук через Google Lens</div>
+          <ol class="steps-list">
+            <li>Поверніться на головну сторінку <strong>google.com</strong>.</li>
+            <li>У рядку пошуку натисніть іконку <span class="ui-ref">🔍 Пошук за зображенням</span> (іконка камери або Lens, праворуч у рядку).</li>
+            <li>Натисніть <span class="ui-ref">Завантажити файл</span> та виберіть збережене зображення.</li>
+            <li>Перегляньте результати — Google покаже сайти, де зустрічається це зображення. Знайдіть серед них першоджерело.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: інтерфейс Google Lens із завантаженим зображенням та результатами пошуку</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗАВДАННЯ 3 -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">3</div>
+      <div class="task-title-block">
+        <h2>Академічний пошук у Google Scholar</h2>
+        <div class="task-desc">Пошук наукових статей та фільтрація за роком публікації</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Знайти наукові статті за темою опитування у Google Академії</li>
+          <li>Відфільтрувати статті за роком — лише з 2023 року</li>
+          <li>Відкрити одну статтю у форматі PDF та переконатися, що це наукова публікація</li>
+        </ul>
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">3.1 — Пошук у Google Академії</div>
+          <ol class="steps-list">
+            <li>Перейдіть на сторінку <strong>scholar.google.com</strong>.</li>
+            <li>Введіть пошуковий запит за темою (можна використати ключові слова з вашого опитування).</li>
+            <div class="operator-box" style="margin:10px 0 0 0">
+              <div class="op-label">Приклади запитів для Scholar</div>
+              <div class="op-query">digital habits university students</div>
+              <div class="op-comment">або</div>
+              <div class="op-query">соціальні мережі студенти залежність</div>
+              <div class="op-comment">У Scholar можна шукати як українською, так і англійською — англійська дає більше результатів</div>
+            </div>
+            <li style="margin-top:10px">У лівому меню знайдіть фільтр <strong>«З 2023»</strong> (або вкажіть рік вручну) — натисніть на нього.</li>
+            <li>Зверніть увагу на посилання праворуч від деяких статей — <strong>[PDF]</strong> означає безкоштовний доступ до повного тексту.</li>
+            <li>Відкрийте одну статтю через PDF-посилання та переконайтеся, що перед вами наукова публікація (є анотація, список літератури, назва журналу).</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: результати Google Scholar з активним фільтром за роком (меню зліва)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗАВДАННЯ 4 -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">4</div>
+      <div class="task-title-block">
+        <h2>Бібліотека та автоматичне цитування</h2>
+        <div class="task-desc">Збереження статей та генерація посилань у форматі APA</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Зберегти дві статті у «Моїй бібліотеці» Google Scholar</li>
+          <li>Згенерувати автоматичне посилання у форматі APA</li>
+          <li>Вставити готове посилання у документ звіту</li>
+        </ul>
+      </div>
+
+      <div class="note-box">
+        <strong>Навіщо це потрібно:</strong> У курсових і дипломних роботах список літератури має бути оформлений за стандартом. Google Scholar генерує готове посилання автоматично — це економить час і виключає помилки.
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">4.1 — Збереження статей до бібліотеки</div>
+          <ol class="steps-list">
+            <li>Поверніться до результатів пошуку в Google Scholar (Завдання 3).</li>
+            <li>Оберіть дві статті, які найбільше підходять за темою.</li>
+            <li>Під кожною статтею натисніть іконку <span class="ui-ref">⭐ Зберегти</span> (зірочка).</li>
+            <li>Перейдіть у <span class="ui-ref">Моя бібліотека</span> (меню у лівому верхньому куті) та переконайтеся, що обидві статті з'явилися там.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: «Моя бібліотека» з двома збереженими статтями</div>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">4.2 — Автоматичне генерування цитати</div>
+          <ol class="steps-list">
+            <li>У «Моїй бібліотеці» під однією зі статей натисніть іконку <span class="ui-ref">« »  Цитувати</span> (лапки).</li>
+            <li>У вікні, що відкриється, оберіть формат <strong>APA</strong>.</li>
+            <li>Скопіюйте готовий текст посилання.</li>
+            <li>Перейдіть у документ звіту та вставте посилання як звичайний текст під скріншотом бібліотеки.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: вікно цитування з обраним форматом APA</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗАВДАННЯ 5 -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">5</div>
+      <div class="task-title-block">
+        <h2>Дослідження наукового профілю викладача</h2>
+        <div class="task-desc">Перевірка цитованості та h-індексу через Google Scholar</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Знайти науковий профіль одного з викладачів дисципліни IDST у Google Scholar</li>
+          <li>Знайти його h-індекс та кількість цитувань</li>
+          <li>Записати результат у звіт текстом</li>
+        </ul>
+      </div>
+
+      <div class="note-box">
+        <strong>Що таке h-індекс:</strong> Індекс Гірша (h-індекс) — показник наукової впливовості дослідника. Наприклад, h-індекс = 5 означає, що щонайменше 5 статей науковця процитовано щонайменше 5 разів кожна.
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">5.1 — Пошук профілю викладача</div>
+          <ol class="steps-list">
+            <li>На головній сторінці <strong>scholar.google.com</strong> введіть прізвище та ім'я одного з викладачів дисципліни IDST.</li>
+            <li>Якщо у дослідника є підтверджений профіль — він з'явиться у верхній частині результатів із фото та назвою університету. Натисніть на його ім'я.</li>
+            <li>У правій колонці профілю знайдіть таблицю з показниками: <strong>Цитування</strong> та <strong>h-індекс</strong>.</li>
+            <li>У документ звіту текстом запишіть: <em>«h-індекс науковця [Прізвище] дорівнює [Число], загальна кількість цитувань — [Число]»</em>.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: профіль науковця з показниками цитованості та h-індексом</div>
+        </div>
+      </div>
+
+      <div class="bonus-box">
+        <div class="bonus-label">⭐ Бонусне завдання</div>
+        Перегляньте список публікацій викладача. Знайдіть статтю, яка найбільш пов'язана з темою вашого опитування, та збережіть її до «Моєї бібліотеки».
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ЗВІТ -->
+  <div class="report-section">
+    <h2>Подання звіту</h2>
+    <p class="report-intro">Перевірте звіт і здайте його через Google Classroom — у розділі <strong>Завдання №4</strong>.</p>
+    <table class="report-table">
+      <thead><tr><th style="width:5%">#</th><th>Вимоги до звіту</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1</strong></td><td>Документ названо <strong>Звіт 4 — Прізвище</strong> і збережено в папці <strong>Лабораторні</strong>.</td></tr>
+        <tr><td><strong>2</strong></td><td>Шапка документа містить: «Студент(ка) 1 курсу», прізвище та ім'я, спеціальність, назву роботи.</td></tr>
+        <tr><td><strong>3</strong></td><td>Скріншоти вставлені під відповідними номерами: <strong>1.1 (filetype:pdf), 1.2 (site:), 2.2 (Google Lens), 3.1 (Scholar з фільтром), 4.1 (Моя бібліотека), 4.2 (вікно цитування APA), 5.1 (профіль науковця)</strong>.</td></tr>
+        <tr><td><strong>4</strong></td><td>Під скріншотом бібліотеки вставлено текст автоматично згенерованого посилання у форматі APA.</td></tr>
+        <tr><td><strong>5</strong></td><td>Текстом записано h-індекс та кількість цитувань знайденого науковця.</td></tr>
+        <tr><td><strong>6</strong></td><td>Здайте документ у Google Classroom: <strong>Завдання №4</strong> → <span style="background:rgba(255,255,255,0.15);border-radius:4px;padding:1px 7px;font-weight:700;">+ Додати або створити</span> → оберіть <strong>Звіт 4 — Прізвище</strong> → <span style="background:rgba(255,255,255,0.15);border-radius:4px;padding:1px 7px;font-weight:700;">Здати</span>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer>
+  Лабораторна робота №4 · Інформаційно-цифрові системи та технології · 2026–2027
+</footer>
+
+</body>
+</html>
