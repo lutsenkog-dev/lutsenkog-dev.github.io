@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Лабораторна робота №7 — Від чернеток до публікації</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green-dark:   #2D4A1E;
+      --green-mid:    #4A7A2A;
+      --green-light:  #D6E8C4;
+      --yellow-warm:  #F5C842;
+      --yellow-pale:  #FFFBEA;
+      --brown-dark:   #3D2B00;
+      --brown-mid:    #7A5A1A;
+      --brown-light:  #C8A84B;
+      --cream:        #F7F2E4;
+      --card-bg:      #FDFAF2;
+      --step-bg:      #F0EDD8;
+      --text-main:    #2A2000;
+      --text-muted:   #5C4D1A;
+      --border:       #C8BB8A;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Nunito', sans-serif; background: var(--cream); color: var(--text-main); line-height: 1.75; font-size: 16px; }
+
+    header { background: var(--green-dark); color: #fff; padding: 48px 24px 40px; text-align: center; border-bottom: 5px solid var(--yellow-warm); }
+    header .eyebrow { font-size: 13px; font-weight: 700; letter-spacing: .12em; color: var(--yellow-warm); text-transform: uppercase; margin-bottom: 12px; }
+    header h1 { font-family: 'Playfair Display', serif; font-size: clamp(22px,4vw,36px); line-height: 1.25; margin: 0 auto 16px; max-width: 700px; }
+    header .subtitle { font-size: 15px; color: #c8e8a8; max-width: 580px; margin: 0 auto; }
+
+    main { max-width: 860px; margin: 0 auto; padding: 48px 24px 64px; }
+
+    .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px; }
+    .meta-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px 24px; }
+    .meta-card h3 { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 8px; }
+    .meta-card p { font-size: 15px; }
+
+    .scenario { background: var(--green-light); border-left: 4px solid var(--green-mid); border-radius: 0 8px 8px 0; padding: 20px 24px; margin-bottom: 16px; font-size: 15px; color: var(--green-dark); }
+
+    .before-start { background: var(--green-dark); border-radius: 10px; padding: 28px 32px; margin-bottom: 44px; color: #fff; }
+    .before-start h3 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--yellow-warm); margin-bottom: 6px; }
+    .before-start .before-intro { font-size: 14px; color: #c8e8a8; margin-bottom: 20px; }
+    .before-start ol { list-style: none; counter-reset: bc; display: flex; flex-direction: column; gap: 12px; }
+    .before-start ol li { counter-increment: bc; display: flex; gap: 14px; align-items: flex-start; font-size: 15px; line-height: 1.6; }
+    .before-start ol li::before { content: counter(bc); flex-shrink: 0; width: 26px; height: 26px; background: var(--yellow-warm); color: var(--brown-dark); border-radius: 50%; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 3px; }
+    .ui-ref-dark { background: rgba(255,255,255,0.15); border-radius: 4px; padding: 1px 7px; font-weight: 700; font-size: 13.5px; }
+
+    .task { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 36px; overflow: hidden; }
+    .task-header { display: flex; align-items: flex-start; gap: 20px; padding: 24px 28px; background: var(--yellow-pale); border-bottom: 1px solid var(--border); }
+    .task-num { flex-shrink: 0; width: 44px; height: 44px; background: var(--green-dark); color: #fff; font-family: 'Playfair Display', serif; font-size: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+    .task-title-block h2 { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--green-dark); line-height: 1.3; }
+    .task-title-block .task-desc { font-size: 14px; color: var(--text-muted); margin-top: 4px; font-style: italic; }
+    .task-body { padding: 24px 28px; }
+
+    .requirements h4 { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 12px; }
+    .requirements ul { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 28px; }
+    .requirements ul li { display: flex; gap: 10px; font-size: 15px; line-height: 1.6; }
+    .requirements ul li::before { content: '›'; color: var(--green-mid); font-weight: 700; font-size: 18px; line-height: 1.4; flex-shrink: 0; }
+
+    .steps-section h4 { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 16px; }
+    .steps-group { margin-bottom: 24px; }
+    .steps-group-title { font-size: 15px; font-weight: 700; color: var(--green-dark); background: var(--green-light); border-radius: 6px; padding: 8px 14px; margin-bottom: 12px; display: inline-block; }
+    .steps-list { list-style: none; counter-reset: sc; display: flex; flex-direction: column; gap: 10px; padding-left: 8px; }
+    .steps-list li { counter-increment: sc; display: flex; gap: 14px; align-items: flex-start; font-size: 15px; line-height: 1.65; }
+    .steps-list li::before { content: counter(sc); flex-shrink: 0; width: 26px; height: 26px; background: var(--brown-light); color: var(--brown-dark); border-radius: 50%; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 3px; }
+    .ui-ref { background: var(--step-bg); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; font-size: 13.5px; font-weight: 700; color: var(--green-dark); white-space: nowrap; }
+
+    .structure-box { background: var(--step-bg); border: 1px solid var(--border); border-radius: 8px; padding: 18px 22px; margin: 14px 0; font-size: 14px; }
+    .structure-box .structure-label { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 12px; }
+    .structure-item { display: flex; align-items: baseline; gap: 10px; padding: 6px 0; border-bottom: 1px dashed var(--border); font-size: 14.5px; }
+    .structure-item:last-child { border-bottom: none; }
+    .structure-item .s-num { flex-shrink: 0; font-weight: 700; color: var(--green-dark); width: 24px; }
+    .structure-item .s-title { font-weight: 700; color: var(--text-main); }
+    .structure-item .s-hint { color: var(--text-muted); font-size: 13px; margin-left: 6px; }
+    .structure-item .s-source { display: inline-block; background: var(--green-dark); color: #fff; font-size: 11px; font-weight: 700; border-radius: 4px; padding: 1px 8px; margin-left: 8px; }
+
+    .apa-box { background: #1a1a2e; border-radius: 8px; padding: 18px 22px; margin: 14px 0; }
+    .apa-box .apa-label { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--yellow-warm); margin-bottom: 10px; font-family: 'Nunito', sans-serif; }
+    .apa-box .apa-text { font-family: 'Courier New', monospace; font-size: 13px; color: #e0e8ff; line-height: 1.9; white-space: pre-wrap; }
+    .apa-box .apa-comment { color: #6b7db3; font-size: 12px; margin-top: 10px; font-family: 'Nunito', sans-serif; font-style: italic; }
+
+    .note-box { background: var(--green-light); border-left: 4px solid var(--green-mid); border-radius: 0 6px 6px 0; padding: 14px 18px; margin: 16px 0; font-size: 14px; color: var(--green-dark); }
+    .note-box strong { font-weight: 700; }
+
+    .warn-box { background: #fff8e8; border-left: 4px solid var(--yellow-warm); border-radius: 0 6px 6px 0; padding: 14px 18px; margin: 16px 0; font-size: 14px; color: var(--brown-dark); }
+    .warn-box strong { font-weight: 700; }
+
+    .screenshot-tag { display: inline-block; background: var(--yellow-warm); color: var(--brown-dark); font-size: 12px; font-weight: 700; border-radius: 4px; padding: 2px 10px; margin-top: 10px; }
+    .link-tag { display: inline-block; background: var(--green-dark); color: #fff; font-size: 12px; font-weight: 700; border-radius: 4px; padding: 2px 10px; margin-top: 6px; margin-left: 6px; }
+
+    .section-divider { border: none; border-top: 2px dashed var(--border); margin: 28px 0; }
+
+    .report-section { background: var(--green-dark); color: #fff; border-radius: 10px; padding: 32px 32px 28px; margin-top: 8px; }
+    .report-section h2 { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--yellow-warm); margin-bottom: 6px; }
+    .report-section .report-intro { font-size: 14px; color: #c8e8a8; margin-bottom: 24px; }
+    .report-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .report-table thead tr { background: rgba(255,255,255,.12); }
+    .report-table thead th { padding: 10px 14px; text-align: left; font-weight: 700; color: var(--yellow-warm); border-bottom: 1px solid rgba(255,255,255,.2); }
+    .report-table tbody tr { border-bottom: 1px solid rgba(255,255,255,.1); }
+    .report-table tbody td { padding: 10px 14px; color: #eee; vertical-align: top; }
+
+    footer { text-align: center; font-size: 13px; color: var(--text-muted); padding: 24px; border-top: 1px solid var(--border); margin-top: 16px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Інформаційно-цифрові системи та технології</div>
+  <h1>Лабораторна робота №7<br>Від чернеток до публікації</h1>
+  <p class="subtitle">Наскрізний кейс «Цифрові звички» — тези доповіді, академічне форматування та експорт</p>
+</header>
+
+<main>
+
+  <div class="meta-grid">
+    <div class="meta-card">
+      <h3>Мета роботи</h3>
+      <p>Зібрати результати всіх попередніх робіт в єдиний академічний документ: навчитися використовувати стилі, виноски, нумерацію сторінок, коментування та експорт у PDF.</p>
+    </div>
+    <div class="meta-card">
+      <h3>Обладнання та ПЗ</h3>
+      <p>Комп'ютер з доступом до інтернету; браузер Google Chrome; корпоративний обліковий запис Google; матеріали Лабораторних робіт №3, 4, 5 і 6.</p>
+    </div>
+  </div>
+
+  <div class="scenario">
+    <strong>Наскрізний кейс:</strong> Університет запрошує вас виступити на студентській науковій конференції. Ви вже маєте все необхідне: дані опитування (Робота 3), наукові джерела (Робота 4), ШІ-аналіз (Робота 5) та схеми (Робота 6). Сьогодні ви зшиєте всі ці матеріали в єдиний документ — тези доповіді, оформлені за академічними стандартами, — та підготуєте англомовну PDF-версію для публікації.
+  </div>
+
+  <div class="before-start">
+    <h3>⚑ Перед початком — відкрийте матеріали попередніх робіт</h3>
+    <p class="before-intro">Підготуйте звіт і відкрийте файли, які знадобляться під час виконання.</p>
+    <ol>
+      <li>На Google Диску перейдіть у папку <strong>Інформаційно-цифрові_системи → Лабораторні</strong>. Створіть документ <strong>Звіт 7 — Прізвище</strong>, оформіть шапку.</li>
+      <li>У окремих вкладках відкрийте: таблицю з Роботи №3 (з діаграмами), «Мою бібліотеку» в Google Scholar (джерела з Роботи №4), папку зі збереженими PNG-зображеннями з Роботи №6.</li>
+      <li>Залиште документ звіту відкритим — після кожного етапу вставляйте скріншот.</li>
+    </ol>
+  </div>
+
+  <!-- ЗАВДАННЯ 1 -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">1</div>
+      <div class="task-title-block">
+        <h2>Компіляція матеріалів (Збірка тез доповіді)</h2>
+        <div class="task-desc">Зібрати результати всіх попередніх робіт в єдиний структурований документ</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Створити документ «Тези — Прізвище — Спеціальність» із чіткою структурою розділів</li>
+          <li>Вставити діаграму з Роботи №3 та схему з Роботи №6</li>
+          <li>Оформити список використаних джерел у форматі APA з Роботи №4</li>
+        </ul>
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">1.1 — Створення документа та структури</div>
+          <ol class="steps-list">
+            <li>На Google Диску у папці <strong>Інформаційно-цифрові_системи</strong> створіть новий Google Документ. Назвіть його: <strong>Тези — Прізвище — Спеціальність</strong>.</li>
+            <li>Сформуйте такі розділи документа (поки що лише заголовки):</li>
+          </ol>
+
+          <div class="structure-box">
+            <div class="structure-label">Структура тез доповіді</div>
+            <div class="structure-item"><span class="s-num">—</span><span><span class="s-title">Назва доповіді</span> <span class="s-hint">(по центру)</span></span></div>
+            <div class="structure-item"><span class="s-num">—</span><span><span class="s-title">ПІБ, курс, спеціальність</span> <span class="s-hint">(по правому краю)</span></span></div>
+            <div class="structure-item"><span class="s-num">1.</span><span><span class="s-title">Вступ</span> <span class="s-hint">— актуальність теми, 1–2 абзаци</span></span></div>
+            <div class="structure-item"><span class="s-num">2.</span><span><span class="s-title">Методологія та результати</span> <span class="s-hint">— опис опитування + діаграма + схема</span> <span class="s-source">Роботи 3 і 6</span></span></div>
+            <div class="structure-item"><span class="s-num">3.</span><span><span class="s-title">Висновки</span> <span class="s-hint">— ваші або згенеровані ШІ з Роботи 5</span> <span class="s-source">Робота 5</span></span></div>
+            <div class="structure-item"><span class="s-num">4.</span><span><span class="s-title">Список використаних джерел</span> <span class="s-hint">— 2–3 джерела у форматі APA</span> <span class="s-source">Робота 4</span></span></div>
+          </div>
+
+          <ol class="steps-list">
+            <li>Напишіть текст для кожного розділу. Текст може бути коротким — головне зараз структура та наявність усіх елементів.</li>
+          </ol>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">1.2 — Вставка зображень із попередніх робіт</div>
+          <ol class="steps-list">
+            <li>У розділ <strong>«Методологія та результати»</strong> вставте діаграму з Роботи №3: <span class="ui-ref">Вставити → Зображення → Завантажити з комп'ютера</span> → оберіть PNG-файл діаграми. Підпишіть під нею: <em>«Рис. 1. Розподіл часу в інтернеті (дані опитування, 2026)»</em>.</li>
+            <li>Нижче вставте PNG блок-схеми з Роботи №6 (збережено в папці «Скріншоти_ЛР6» або експортовано в Роботі 6, Етап 4). Підпишіть: <em>«Рис. 2. Алгоритм дослідження»</em>.</li>
+          </ol>
+          <div class="note-box">
+            <strong>Де взяти PNG:</strong> У Роботі №6 (Етап 4) ви вже експортували обидва зображення. Якщо файли не збереглися — повторіть експорт із Google Drawings і Draw.io за тими ж кроками.
+          </div>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">1.3 — Оформлення списку використаних джерел (APA)</div>
+          <ol class="steps-list">
+            <li>Відкрийте <strong>scholar.google.com</strong> → <span class="ui-ref">Моя бібліотека</span> — там збережені статті з Роботи №4.</li>
+            <li>Під кожною статтею натисніть <span class="ui-ref">« » Цитувати</span> → оберіть формат <strong>APA</strong> → скопіюйте текст посилання.</li>
+            <li>У розділ <strong>«Список використаних джерел»</strong> вставте 2–3 джерела як нумерований список. Приклад правильного вигляду:</li>
+          </ol>
+
+          <div class="apa-box">
+            <div class="apa-label">Приклад оформлення APA у списку</div>
+            <div class="apa-text">1. Прізвище, І. І. (2024). Назва статті. Назва журналу, 12(3), 45–67. https://doi.org/...
+2. Surname, A. B., & Surname, C. D. (2023). Article title. Journal Name, 8(1), 12–30.
+3. Прізвище, І. І. (2023). Назва монографії. Видавництво.</div>
+            <div class="apa-comment">Перевірте: у кожному джерелі є автор, рік, назва і місце публікації. Шрифт і розмір — такий самий, як основний текст.</div>
+          </div>
+
+          <ol class="steps-list">
+            <li>Перевірте форматування: текст джерел має відповідати основному тексту документа (шрифт, розмір). У разі невідповідності — виділіть список і вирівняйте вручну.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: документ «Тези» з усіма розділами, вставленими зображеннями та списком джерел</div>
+          <div class="link-tag">🔗 Посилання на документ «Тези» (доступ — Переглядач)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗАВДАННЯ 2 -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">2</div>
+      <div class="task-title-block">
+        <h2>Автоматизоване форматування</h2>
+        <div class="task-desc">Стилі заголовків, виноски та нумерація сторінок — академічний стандарт</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Налаштувати поля сторінки та основний текст документа</li>
+          <li>Застосувати стиль «Заголовок 1» до всіх розділів та оновити його вигляд</li>
+          <li>Додати виноску та нумерацію сторінок</li>
+        </ul>
+      </div>
+
+      <div class="note-box">
+        <strong>Навіщо стилі, а не ручне форматування:</strong> Якщо виділити текст жирним і збільшити шрифт — це ручне форматування. Воно не масштабується: щоб змінити всі заголовки, доведеться переробляти кожен окремо. Стиль «Заголовок 1» — це шаблон: змінив один раз і всі заголовки оновились автоматично.
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">2.1 — Параметри сторінки та основний текст</div>
+          <ol class="steps-list">
+            <li>Меню <span class="ui-ref">Файл → Параметри сторінки</span>. Встановіть поля з усіх боків: <strong>2 см</strong>. Натисніть <span class="ui-ref">ОК</span>.</li>
+            <li>Виділіть увесь текст (<strong>Ctrl+A</strong>). На панелі інструментів встановіть: шрифт <strong>Times New Roman</strong> (або <strong>Georgia</strong>, якщо Times New Roman недоступний), розмір <strong>14</strong>.</li>
+            <li>Меню <span class="ui-ref">Формат → Міжрядковий інтервал → Спеціальне значення</span> → введіть <strong>1,5</strong>. Вирівнювання: <span class="ui-ref">По ширині</span> (остання іконка у рядку вирівнювання).</li>
+          </ol>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">2.2 — Налаштування стилю «Заголовок 1»</div>
+          <ol class="steps-list">
+            <li>Виділіть слово <strong>«Вступ»</strong>. На верхній панелі знайдіть поле зі стилями (де написано «Звичайний текст») та оберіть <span class="ui-ref">Заголовок 1</span>. Текст зміниться.</li>
+            <li>Не знімаючи виділення, вручну встановіть: шрифт <strong>Times New Roman / Georgia</strong>, розмір <strong>14</strong>, <strong>Жирний</strong>, вирівнювання <strong>По центру</strong>.</li>
+            <li>Знову клікніть на <span class="ui-ref">Заголовок 1</span> у панелі стилів → у меню, що з'явиться, оберіть <span class="ui-ref">Оновити «Заголовок 1» відповідно до виділеного</span>.</li>
+            <li>Тепер застосуйте цей стиль до решти заголовків — просто виділіть слово і клікніть <span class="ui-ref">Заголовок 1</span>: <strong>«Методологія та результати»</strong>, <strong>«Висновки»</strong>, <strong>«Список використаних джерел»</strong>.</li>
+          </ol>
+          <div class="warn-box">
+            <strong>Якщо стиль не оновився для всіх:</strong> Виділіть заголовок із правильним форматуванням → клік на Заголовок 1 у панелі → «Оновити стиль». Потім виділіть решту заголовків по черзі і просто клікніть Заголовок 1 — вони оновляться автоматично.
+          </div>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">2.3 — Виноска та нумерація сторінок</div>
+          <ol class="steps-list">
+            <li>Поставте курсор у кінці будь-якого речення у Вступі. Меню <span class="ui-ref">Вставити → Виноска</span> (або <strong>Ctrl+Alt+F</strong>). Внизу сторінки з'явиться рядок з цифрою — напишіть там посилання на джерело або пояснення терміна.</li>
+            <li>Меню <span class="ui-ref">Вставити → Номери сторінок</span> → оберіть розташування <strong>внизу справа</strong>.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: відкритий документ «Тези» з видимим стилем «Заголовок 1», випискою та номером сторінки внизу</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗАВДАННЯ 3 -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">3</div>
+      <div class="task-title-block">
+        <h2>Коментування та історія версій</h2>
+        <div class="task-desc">Самостійне рецензування власного тексту</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Залишити коментар до власного тексту та позначити його як вирішений</li>
+          <li>Внести правку в режимі «Пропонування» та прийняти її</li>
+          <li>Переглянути історію версій документа</li>
+        </ul>
+      </div>
+
+      <div class="note-box">
+        <strong>Навіщо це потрібно:</strong> Коментарі та режим «Пропонування» — стандартний інструмент рецензування в академічному середовищі. Викладачі, редактори наукових журналів і наукові керівники використовують їх при роботі з рукописами.
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">3.1 — Коментар до власного тексту</div>
+          <ol class="steps-list">
+            <li>Виділіть будь-яке речення у розділі «Вступ». Натисніть <strong>Ctrl+Alt+M</strong> або правий клік → <span class="ui-ref">Додати коментар</span>.</li>
+            <li>Напишіть у коментарі самостійну нотатку, наприклад: <em>«Тут варто додати статистику з опитування»</em>.</li>
+            <li>Натисніть <span class="ui-ref">Прокоментувати</span>, щоб зберегти.</li>
+            <li>Натисніть галочку <span class="ui-ref">✓ Вирішено</span> — коментар позначиться як опрацьований.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: документ із вирішеним коментарем (жовта позначка та галочка)</div>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">3.2 — Режим «Пропонування»</div>
+          <ol class="steps-list">
+            <li>У правому верхньому куті під кнопкою «Поділитися» знайдіть іконку олівця → клікніть і оберіть <span class="ui-ref">Пропонування</span> (зеленого кольору).</li>
+            <li>Виділіть одне слово у тексті та замініть його іншим — зміна відобразиться зеленим кольором із закресленням старого варіанта.</li>
+            <li>Поверніться у режим <span class="ui-ref">Редагування</span>. Біля зеленої правки з'явиться галочка — натисніть її, щоб <strong>прийняти</strong> зміну.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: зелена правка в режимі «Пропонування» до або після прийняття</div>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">3.3 — Історія версій</div>
+          <ol class="steps-list">
+            <li>Меню <span class="ui-ref">Файл → Історія версій → Переглянути історію версій</span>.</li>
+            <li>На правій панелі побачите список усіх збережень із часом і автором. Клікніть на будь-яку версію — відкриється знімок документа на той момент.</li>
+            <li>Поверніться до поточної версії через <span class="ui-ref">← Назад</span> у верхньому лівому куті.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: відкрита панель «Історія версій» із видимими записами</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗАВДАННЯ 4 -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">4</div>
+      <div class="task-title-block">
+        <h2>Підготовка до міжнародної публікації</h2>
+        <div class="task-desc">Переклад документа та експорт у захищений формат PDF</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Перекласти документ «Тези» на англійську мову вбудованим перекладачем Google Docs</li>
+          <li>Переглянути якість перекладу та виправити очевидні помилки</li>
+          <li>Зберегти англійську версію як PDF та завантажити на Диск</li>
+        </ul>
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">4.1 — Переклад документа</div>
+          <ol class="steps-list">
+            <li>У документі «Тези» меню <span class="ui-ref">Інструменти → Перекласти документ</span>.</li>
+            <li>У вікні оберіть мову: <strong>Англійська (English)</strong>. Натисніть <span class="ui-ref">Перекласти</span>.</li>
+            <li>Відкриється нова вкладка з англомовною копією документа — усі стилі, зображення та виноски збережені.</li>
+            <li>Перегляньте переклад: зверніть увагу на заголовки, власні назви та терміни вашої спеціальності — їх може бути перекладено некоректно. Виправте очевидні помилки вручну.</li>
+          </ol>
+          <div class="warn-box">
+            <strong>Очікувана якість перекладу:</strong> Вбудований перекладач Google зберігає форматування, але може неточно перекласти вузькоспеціалізовані терміни. Це нормально — мета завдання навчитися користуватися інструментом, а не отримати ідеальний переклад.
+          </div>
+          <div class="screenshot-tag">📸 Скріншот: відкрита англомовна версія тез у Google Docs</div>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">4.2 — Експорт у PDF та збереження на Диск</div>
+          <ol class="steps-list">
+            <li>В англомовному документі меню <span class="ui-ref">Файл → Завантажити → PDF-документ (.pdf)</span> — файл збережеться на комп'ютер.</li>
+            <li>Поверніться на Google Диск → папка <strong>Інформаційно-цифрові_системи → Лабораторні</strong> → <span class="ui-ref">+ Створити → Завантажити файли</span> → завантажте PDF.</li>
+            <li>Правий клік на файл → <span class="ui-ref">Надати доступ</span> → «Усі, у кого є посилання — Переглядач» → скопіюйте посилання.</li>
+          </ol>
+          <div class="link-tag">🔗 Посилання на PDF у звіті</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗВІТ -->
+  <div class="report-section">
+    <h2>Подання звіту</h2>
+    <p class="report-intro">Перевірте звіт і здайте його через Google Classroom — у розділі <strong>Завдання №7</strong>.</p>
+    <table class="report-table">
+      <thead><tr><th style="width:5%">#</th><th>Вимоги до звіту</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1</strong></td><td>Документ названо <strong>Звіт 7 — Прізвище</strong>, збережено в папці <strong>Лабораторні</strong>.</td></tr>
+        <tr><td><strong>2</strong></td><td>Шапка документа: «Студент(ка) 1 курсу», прізвище та ім'я, спеціальність, назва роботи.</td></tr>
+        <tr><td><strong>3</strong></td><td>Скріншоти під відповідними номерами: <strong>1.3 (документ «Тези» з усіма розділами та джерелами), 2.3 (заголовок 1 + виноска + номер сторінки), 3.1 (вирішений коментар), 3.2 (зелена правка), 3.3 (панель «Історія версій»), 4.1 (англомовна версія), </strong>.</td></tr>
+        <tr><td><strong>4</strong></td><td>Посилання у звіті: на документ «Тези» (Етап 1) та на PDF-файл (Етап 4) — обидва з доступом «Переглядач».</td></tr>
+        <tr><td><strong>5</strong></td><td>Здайте документ у Google Classroom: <strong>Завдання №7</strong> → <span style="background:rgba(255,255,255,0.15);border-radius:4px;padding:1px 7px;font-weight:700;">+ Додати або створити</span> → оберіть <strong>Звіт 7 — Прізвище</strong> → <span style="background:rgba(255,255,255,0.15);border-radius:4px;padding:1px 7px;font-weight:700;">Здати</span>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer>
+  Лабораторна робота №7 · Інформаційно-цифрові системи та технології · 2026–2027
+</footer>
+
+</body>
+</html>

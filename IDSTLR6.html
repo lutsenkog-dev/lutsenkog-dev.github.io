@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Лабораторна робота №6 — Від тексту до графіки</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green-dark:   #2D4A1E;
+      --green-mid:    #4A7A2A;
+      --green-light:  #D6E8C4;
+      --yellow-warm:  #F5C842;
+      --yellow-pale:  #FFFBEA;
+      --brown-dark:   #3D2B00;
+      --brown-mid:    #7A5A1A;
+      --brown-light:  #C8A84B;
+      --cream:        #F7F2E4;
+      --card-bg:      #FDFAF2;
+      --step-bg:      #F0EDD8;
+      --text-main:    #2A2000;
+      --text-muted:   #5C4D1A;
+      --border:       #C8BB8A;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Nunito', sans-serif; background: var(--cream); color: var(--text-main); line-height: 1.75; font-size: 16px; }
+
+    header { background: var(--green-dark); color: #fff; padding: 48px 24px 40px; text-align: center; border-bottom: 5px solid var(--yellow-warm); }
+    header .eyebrow { font-size: 13px; font-weight: 700; letter-spacing: .12em; color: var(--yellow-warm); text-transform: uppercase; margin-bottom: 12px; }
+    header h1 { font-family: 'Playfair Display', serif; font-size: clamp(22px,4vw,36px); line-height: 1.25; margin: 0 auto 16px; max-width: 700px; }
+    header .subtitle { font-size: 15px; color: #c8e8a8; max-width: 580px; margin: 0 auto; }
+
+    main { max-width: 860px; margin: 0 auto; padding: 48px 24px 64px; }
+
+    .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px; }
+    .meta-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px 24px; }
+    .meta-card h3 { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 8px; }
+    .meta-card p { font-size: 15px; }
+
+    .scenario { background: var(--green-light); border-left: 4px solid var(--green-mid); border-radius: 0 8px 8px 0; padding: 20px 24px; margin-bottom: 16px; font-size: 15px; color: var(--green-dark); }
+
+    .before-start { background: var(--green-dark); border-radius: 10px; padding: 28px 32px; margin-bottom: 44px; color: #fff; }
+    .before-start h3 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--yellow-warm); margin-bottom: 6px; }
+    .before-start .before-intro { font-size: 14px; color: #c8e8a8; margin-bottom: 20px; }
+    .before-start ol { list-style: none; counter-reset: bc; display: flex; flex-direction: column; gap: 12px; }
+    .before-start ol li { counter-increment: bc; display: flex; gap: 14px; align-items: flex-start; font-size: 15px; line-height: 1.6; }
+    .before-start ol li::before { content: counter(bc); flex-shrink: 0; width: 26px; height: 26px; background: var(--yellow-warm); color: var(--brown-dark); border-radius: 50%; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 3px; }
+    .ui-ref-dark { background: rgba(255,255,255,0.15); border-radius: 4px; padding: 1px 7px; font-weight: 700; font-size: 13.5px; }
+
+    .task { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 36px; overflow: hidden; }
+    .task-header { display: flex; align-items: flex-start; gap: 20px; padding: 24px 28px; background: var(--yellow-pale); border-bottom: 1px solid var(--border); }
+    .task-num { flex-shrink: 0; width: 44px; height: 44px; background: var(--green-dark); color: #fff; font-family: 'Playfair Display', serif; font-size: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+    .task-title-block h2 { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--green-dark); line-height: 1.3; }
+    .task-title-block .task-desc { font-size: 14px; color: var(--text-muted); margin-top: 4px; font-style: italic; }
+    .task-body { padding: 24px 28px; }
+
+    .requirements { margin-bottom: 28px; }
+    .requirements h4 { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 12px; }
+    .requirements ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .requirements ul li { display: flex; gap: 10px; font-size: 15px; line-height: 1.6; }
+    .requirements ul li::before { content: '›'; color: var(--green-mid); font-weight: 700; font-size: 18px; line-height: 1.4; flex-shrink: 0; }
+
+    .steps-section h4 { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 16px; }
+    .steps-group { margin-bottom: 24px; }
+    .steps-group-title { font-size: 15px; font-weight: 700; color: var(--green-dark); background: var(--green-light); border-radius: 6px; padding: 8px 14px; margin-bottom: 12px; display: inline-block; }
+    .steps-list { list-style: none; counter-reset: sc; display: flex; flex-direction: column; gap: 10px; padding-left: 8px; }
+    .steps-list li { counter-increment: sc; display: flex; gap: 14px; align-items: flex-start; font-size: 15px; line-height: 1.65; }
+    .steps-list li::before { content: counter(sc); flex-shrink: 0; width: 26px; height: 26px; background: var(--brown-light); color: var(--brown-dark); border-radius: 50%; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 3px; }
+    .ui-ref { background: var(--step-bg); border: 1px solid var(--border); border-radius: 4px; padding: 1px 6px; font-size: 13.5px; font-weight: 700; color: var(--green-dark); white-space: nowrap; }
+
+    .prompt-box { background: #1a1a2e; border-radius: 8px; padding: 20px 22px; margin: 14px 0; }
+    .prompt-box .prompt-label { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--yellow-warm); margin-bottom: 10px; font-family: 'Nunito', sans-serif; }
+    .prompt-box .prompt-text { font-family: 'Courier New', monospace; font-size: 13.5px; color: #e0e8ff; line-height: 1.8; white-space: pre-wrap; }
+    .prompt-box .prompt-var { color: #7dd3fc; font-style: italic; }
+    .prompt-box .prompt-comment { color: #6b7db3; font-size: 12px; margin-top: 10px; font-family: 'Nunito', sans-serif; font-style: italic; }
+
+    .note-box { background: var(--green-light); border-left: 4px solid var(--green-mid); border-radius: 0 6px 6px 0; padding: 14px 18px; margin: 16px 0; font-size: 14px; color: var(--green-dark); }
+    .note-box strong { font-weight: 700; }
+
+    .warn-box { background: #fff8e8; border-left: 4px solid var(--yellow-warm); border-radius: 0 6px 6px 0; padding: 14px 18px; margin: 16px 0; font-size: 14px; color: var(--brown-dark); }
+    .warn-box strong { font-weight: 700; }
+
+    .chain-box { background: var(--step-bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; margin: 14px 0; font-size: 14px; }
+    .chain-box .chain-label { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 10px; }
+    .chain { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 13.5px; }
+    .chain-step { background: var(--green-dark); color: #fff; border-radius: 6px; padding: 4px 12px; font-weight: 700; }
+    .chain-step.highlight { background: var(--yellow-warm); color: var(--brown-dark); }
+    .chain-arrow { color: var(--green-mid); font-size: 18px; font-weight: 700; }
+
+    .screenshot-tag { display: inline-block; background: var(--yellow-warm); color: var(--brown-dark); font-size: 12px; font-weight: 700; border-radius: 4px; padding: 2px 10px; margin-top: 10px; }
+    .link-tag { display: inline-block; background: var(--green-dark); color: #fff; font-size: 12px; font-weight: 700; border-radius: 4px; padding: 2px 10px; margin-top: 6px; margin-left: 6px; }
+
+    .section-divider { border: none; border-top: 2px dashed var(--border); margin: 28px 0; }
+
+    .report-section { background: var(--green-dark); color: #fff; border-radius: 10px; padding: 32px 32px 28px; margin-top: 8px; }
+    .report-section h2 { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--yellow-warm); margin-bottom: 6px; }
+    .report-section .report-intro { font-size: 14px; color: #c8e8a8; margin-bottom: 24px; }
+    .report-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .report-table thead tr { background: rgba(255,255,255,.12); }
+    .report-table thead th { padding: 10px 14px; text-align: left; font-weight: 700; color: var(--yellow-warm); border-bottom: 1px solid rgba(255,255,255,.2); }
+    .report-table tbody tr { border-bottom: 1px solid rgba(255,255,255,.1); }
+    .report-table tbody td { padding: 10px 14px; color: #eee; vertical-align: top; }
+
+    footer { text-align: center; font-size: 13px; color: var(--text-muted); padding: 24px; border-top: 1px solid var(--border); margin-top: 16px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Інформаційно-цифрові системи та технології</div>
+  <h1>Лабораторна робота №6<br>Від тексту до графіки: логіка та структура</h1>
+  <p class="subtitle">Наскрізний кейс «Цифрові звички» — скріншоти, векторна графіка та діаграми для портфоліо</p>
+</header>
+
+<main>
+
+  <div class="meta-grid">
+    <div class="meta-card">
+      <h3>Мета роботи</h3>
+      <p>Опанувати інструменти візуалізації: скріншоти з прокруткою, векторну графіку в Google Drawings та професійні діаграми в Draw.io — вручну і з допомогою ШІ.</p>
+    </div>
+    <div class="meta-card">
+      <h3>Обладнання та ПЗ</h3>
+      <p>Комп'ютер з доступом до інтернету; браузер Google Chrome; корпоративний обліковий запис Google; результати Лабораторних робіт №3 і №5.</p>
+    </div>
+  </div>
+
+  <div class="scenario">
+    <strong>Наскрізний кейс:</strong> Ви зібрали дані (Робота 3), знайшли наукові джерела (Робота 4) та проаналізували їх за допомогою ШІ (Робота 5). Тепер — фінальний крок перед портфоліо: перетворити всі ваші результати на візуальні матеріали. Сьогодні ви навчитеся документувати власну роботу, створювати концептуальні схеми та будувати алгоритми — вручну і за допомогою коду Mermaid.
+  </div>
+
+  <div class="before-start">
+    <h3>⚑ Перед початком — створіть документ звіту</h3>
+    <p class="before-intro">Підготуйте звіт і відкрийте матеріали попередніх робіт — вони знадобляться в Етапах 1 і 3.</p>
+    <ol>
+      <li>На Google Диску перейдіть у папку <strong>Інформаційно-цифрові_системи → Лабораторні</strong>.</li>
+      <li>Натисніть <span class="ui-ref-dark">+ Створити</span> → <span class="ui-ref-dark">Google Документи</span>. Назвіть документ: <strong>Звіт 6 — Прізвище</strong>.</li>
+      <li>Оформіть шапку: Студент(ка) 1 курсу / Прізвище Ім'я / Спеціальність 000 Назва / Лабораторна робота 6.</li>
+      <li>У окремих вкладках відкрийте: вашу Google Форму з Роботи №2 (режим перегляду) та таблицю з діаграмами з Роботи №3 — вони знадобляться в Етапі 1.</li>
+      <li>Залиште документ звіту відкритим — після кожного етапу вставляйте скріншот.</li>
+    </ol>
+  </div>
+
+  <!-- ЗАВДАННЯ 1 -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">1</div>
+      <div class="task-title-block">
+        <h2>Фіксація цифрових артефактів (Awesome Screenshot)</h2>
+        <div class="task-desc">Три типи скріншотів — документування власного дослідження для портфоліо</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Встановити розширення Awesome Screenshot у браузер</li>
+          <li>Зробити три різні типи скріншотів із матеріалів своїх попередніх робіт</li>
+          <li>Завантажити скріншоти в папку на Google Диску та надати доступ за посиланням</li>
+        </ul>
+      </div>
+
+      <div class="note-box">
+        <strong>Навіщо це потрібно:</strong> Стандартний PrtScn фіксує лише видиму частину екрана. Для портфоліо потрібні повні скріншоти сторінок — наприклад, вашої довгої анкети з Роботи №2 або таблиці з Роботи №3 з усіма діаграмами.
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">1.1 — Встановлення розширення</div>
+          <ol class="steps-list">
+            <li>У браузері Chrome відкрийте <strong>Chrome Web Store</strong> (chrome.google.com/webstore) та знайдіть <strong>«Awesome Screenshot & Screen Recorder»</strong>.</li>
+            <li>Натисніть <span class="ui-ref">Додати до Chrome</span> → <span class="ui-ref">Додати розширення</span>. Іконка розширення з'явиться поруч з адресним рядком.</li>
+          </ol>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">1.2 — Три типи скріншотів</div>
+          <ol class="steps-list">
+            <li><strong>Full Page (Вся сторінка):</strong> Відкрийте вашу Google Форму з Роботи №2 у режимі перегляду. Натисніть іконку Awesome Screenshot → <span class="ui-ref">Capture Full Page</span>. Завантажте результат.</li>
+            <li><strong>Visible Part (Видима частина):</strong> Перейдіть у ваш поточний звіт (документ Google Docs). Натисніть іконку → <span class="ui-ref">Capture Visible Part</span>. Завантажте результат.</li>
+            <li><strong>Selected Area (Обрана область):</strong> Відкрийте таблицю з Роботи №3 із вашими діаграмами. Натисніть іконку → <span class="ui-ref">Capture Selected Area</span>. Виділіть мишею лише одну найцікавішу діаграму. Завантажте результат.</li>
+          </ol>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">1.3 — Завантаження на Диск і налаштування доступу</div>
+          <ol class="steps-list">
+            <li>На Google Диску у папці <strong>Інформаційно-цифрові_системи</strong> створіть підпапку <strong>Скріншоти_ЛР6</strong>.</li>
+            <li>Завантажте всі три скріншоти в цю папку: <span class="ui-ref">+ Створити → Завантажити файли</span>.</li>
+            <li>Виділіть усі три файли → правий клік → <span class="ui-ref">Надати доступ</span> → змініть на <strong>«Усі, у кого є посилання — Переглядач»</strong> → скопіюйте посилання на кожен файл.</li>
+            <li>Вставте всі три посилання у документ звіту, підписавши тип кожного.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: вікно Awesome Screenshot з одним із трьох режимів</div>
+          <div class="link-tag">🔗 Три посилання на скріншоти у звіті</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗАВДАННЯ 2 -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">2</div>
+      <div class="task-title-block">
+        <h2>Векторна графіка (Google Drawings)</h2>
+        <div class="task-desc">Діаграма Венна «Моя ідеальна професія» — прозорість, шари, групування</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Створити діаграму Венна з трьох кіл із прозорою заливкою</li>
+          <li>Підписати кола та центр відповідно до вашої спеціальності</li>
+          <li>Згрупувати всі елементи та надати доступ за посиланням</li>
+        </ul>
+      </div>
+
+      <div class="note-box">
+        <strong>Растр vs Вектор:</strong> Звичайні скріншоти — це растрові зображення (сітка пікселів). Google Drawings створює векторну графіку — її можна масштабувати без втрати якості. Саме такий формат потрібен для презентацій і сайтів.
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">2.1 — Створення та налаштування кіл</div>
+          <ol class="steps-list">
+            <li>На Google Диску натисніть <span class="ui-ref">+ Створити → Інше → Google Малюнки</span>. Назвіть файл: <strong>Діаграма Венна — Прізвище</strong>.</li>
+            <li>На панелі інструментів натисніть <span class="ui-ref">Фігури → Еліпс</span>. Утримуючи Shift, намалюйте коло. Намалюйте три кола, які частково перетинаються.</li>
+            <li>Для кожного кола налаштуйте прозору заливку: виділіть коло → <span class="ui-ref">Колір заливки → Спеціальний</span> → оберіть колір → повзунком встановіть прозорість 50–60%.</li>
+            <li>Дайте кожному колу свій колір: наприклад, зелений / синій / жовтий.</li>
+          </ol>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">2.2 — Текстові підписи та групування</div>
+          <ol class="steps-list">
+            <li>Додайте текстові написи у кожне коло: <span class="ui-ref">Вставити → Текстове поле</span>.</li>
+          </ol>
+
+          <div class="chain-box">
+            <div class="chain-label">Зміст кіл</div>
+            <div class="chain">
+              <span class="chain-step">Коло 1: «Що я вмію»</span>
+              <span class="chain-arrow">+</span>
+              <span class="chain-step">Коло 2: «Що мені подобається»</span>
+              <span class="chain-arrow">+</span>
+              <span class="chain-step">Коло 3: «Що потрібно ринку»</span>
+              <span class="chain-arrow">→</span>
+              <span class="chain-step highlight">Центр: ваша спеціальність</span>
+            </div>
+          </div>
+
+          <ol class="steps-list">
+            <li>Виділіть усі елементи (Ctrl+A) → меню <span class="ui-ref">Упорядкувати → Згрупувати</span> — всі об'єкти стануть одним цілим.</li>
+            <li>Натисніть кнопку <span class="ui-ref">Надати доступ</span> → «Усі, у кого є посилання — Переглядач» → скопіюйте посилання.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: Google Drawings з готовою діаграмою Венна (панель інструментів має бути видна)</div>
+          <div class="link-tag">🔗 Посилання на Google Малюнок у звіті</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗАВДАННЯ 3 -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">3</div>
+      <div class="task-title-block">
+        <h2>Професійні діаграми (Draw.io)</h2>
+        <div class="task-desc">Алгоритм дослідження вручну + автоматична схема через Mermaid і Gemini</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Вручну побудувати блок-схему ходу вашого дослідження (Роботи 1–6)</li>
+          <li>Попросити Gemini згенерувати Mermaid-код для складної схеми</li>
+          <li>Імпортувати код у Draw.io та отримати автоматично побудовану діаграму</li>
+        </ul>
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">3.1 — Ручна блок-схема в Draw.io</div>
+          <ol class="steps-list">
+            <li>Перейдіть на <strong>app.diagrams.net</strong> → у вікні збереження оберіть <span class="ui-ref">Google Drive</span> → авторизуйтесь → натисніть <span class="ui-ref">Create New Diagram</span> → оберіть порожню діаграму.</li>
+            <li>Назвіть файл <strong>Діаграми_ЛР6 — Прізвище</strong> та збережіть у папку <strong>Інформаційно-цифрові_системи</strong>.</li>
+            <li>Побудуйте блок-схему з правильними фігурами: <strong>овал</strong> — початок/кінець, <strong>прямокутник</strong> — процес, <strong>стрілки</strong> — напрямок.</li>
+          </ol>
+
+          <div class="chain-box">
+            <div class="chain-label">Орієнтовний ланцюжок блоків</div>
+            <div class="chain">
+              <span class="chain-step highlight">Початок</span>
+              <span class="chain-arrow">→</span>
+              <span class="chain-step">Цифрове середовище (ЛР1)</span>
+              <span class="chain-arrow">→</span>
+              <span class="chain-step">Анкетування (ЛР2)</span>
+              <span class="chain-arrow">→</span>
+              <span class="chain-step">Аналіз даних (ЛР3)</span>
+              <span class="chain-arrow">→</span>
+              <span class="chain-step">Пошук джерел (ЛР4)</span>
+              <span class="chain-arrow">→</span>
+              <span class="chain-step">ШІ-аналіз (ЛР5)</span>
+              <span class="chain-arrow">→</span>
+              <span class="chain-step">Візуалізація (ЛР6)</span>
+              <span class="chain-arrow">→</span>
+              <span class="chain-step">Портфоліо</span>
+              <span class="chain-arrow">→</span>
+              <span class="chain-step highlight">Кінець</span>
+            </div>
+          </div>
+
+          <ol class="steps-list">
+            <li>Розфарбуйте блоки: використайте різні кольори для різних типів (початок/кінець, процеси, результат).</li>
+            <li>Збережіть файл: <span class="ui-ref">File → Save</span>.</li>
+          </ol>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">3.2 — Генерація схеми через Gemini + Mermaid</div>
+          <ol class="steps-list">
+            <li>Відкрийте <strong>gemini.google.com</strong> та оберіть одну тему:</li>
+          </ol>
+
+          <div class="chain-box">
+            <div class="chain-label">Варіанти теми (оберіть один)</div>
+            <div class="chain" style="flex-direction:column; align-items:flex-start; gap:8px;">
+              <span class="chain-step">Ментальна карта цифрових інструментів сучасного студента</span>
+              <span class="chain-step">Блок-схема структури ідеальної курсової роботи</span>
+              <span class="chain-step">Алгоритм підготовки студента до сесії</span>
+            </div>
+          </div>
+
+          <ol class="steps-list">
+            <li>Вставте у Gemini промпт (підставте обрану тему):</li>
+          </ol>
+
+          <div class="prompt-box">
+            <div class="prompt-label">Промпт для Gemini</div>
+            <div class="prompt-text">Згенеруй код формату Mermaid для: <span class="prompt-var">[обрана вами тема]</span>.
+Використовуй українську мову для назв блоків.
+Виведи ТІЛЬКИ код — без пояснень і без markdown-огорожі (без ```)</div>
+            <div class="prompt-comment">Якщо Gemini додав ``` на початку і в кінці — видаліть їх перед вставкою в Draw.io</div>
+          </div>
+
+          <ol class="steps-list">
+            <li>Скопіюйте згенерований код.</li>
+            <li>Поверніться у Draw.io. Знайдіть пункт меню <span class="ui-ref">Extras → Edit Diagram</span> (або <span class="ui-ref">+</span> на лівій панелі → пошук «Mermaid»).</li>
+            <li>У вікні, що відкрилось, вставте скопійований код та натисніть <span class="ui-ref">Insert / OK</span>.</li>
+            <li>Діаграма автоматично з'явиться на полотні. Розмістіть її поруч із ручною схемою з пункту 3.1.</li>
+            <li>Збережіть файл. На Google Диску правий клік → <span class="ui-ref">Отримати посилання</span> → «Переглядач» → скопіюйте.</li>
+          </ol>
+
+          <div class="warn-box">
+            <strong>Якщо Mermaid-код не імпортується:</strong> Gemini іноді генерує синтаксис із помилками. Спробуйте написати у Gemini: <em>«Перевір і виправ цей Mermaid-код — він не імпортується в Draw.io»</em> та вставте проблемний код.
+          </div>
+
+          <div class="screenshot-tag">📸 Скріншот: вікно Draw.io з обома схемами — ручною та згенерованою ШІ</div>
+          <div class="link-tag">🔗 Посилання на файл Draw.io у звіті</div>
+          <div style="margin-top:10px; font-size:14px; color:var(--text-muted);">У звіті текстом вкажіть: яку тему ви обрали та який промпт використали.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗАВДАННЯ 4 -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">4</div>
+      <div class="task-title-block">
+        <h2>Експорт та вставка у звіт</h2>
+        <div class="task-desc">Перетворення діаграм на зображення — готові матеріали для портфоліо</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Експортувати діаграму Венна з Google Drawings як PNG</li>
+          <li>Експортувати блок-схему з Draw.io як PNG</li>
+          <li>Вставити обидва зображення безпосередньо у документ звіту</li>
+        </ul>
+      </div>
+
+      <div class="note-box">
+        <strong>Навіщо це потрібно:</strong> Посилання на файл — це зручно для перевірки, але для портфоліо або презентації потрібні готові зображення. Цей етап показує повний цикл: створили → зберегли → використали.
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">4.1 — Експорт із Google Drawings</div>
+          <ol class="steps-list">
+            <li>Відкрийте файл <strong>Діаграма Венна — Прізвище</strong> у Google Drawings.</li>
+            <li>Меню <span class="ui-ref">Файл → Завантажити → PNG</span> — зображення збережеться на комп'ютер.</li>
+          </ol>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">4.2 — Експорт із Draw.io</div>
+          <ol class="steps-list">
+            <li>У Draw.io виберіть ручну блок-схему (або всі елементи Ctrl+A).</li>
+            <li>Меню <span class="ui-ref">File → Export As → PNG</span> → натисніть <span class="ui-ref">Export</span> → збережіть на комп'ютер.</li>
+          </ol>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">4.3 — Вставка зображень у звіт</div>
+          <ol class="steps-list">
+            <li>Відкрийте документ <strong>Звіт 6 — Прізвище</strong>.</li>
+            <li>Меню <span class="ui-ref">Вставити → Зображення → Завантажити з комп'ютера</span> → оберіть PNG діаграми Венна. Підпишіть: <em>«Діаграма Венна — Google Drawings»</em>.</li>
+            <li>Аналогічно вставте PNG блок-схеми з Draw.io. Підпишіть: <em>«Алгоритм дослідження — Draw.io»</em>.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: документ звіту з вставленими зображеннями обох діаграм</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗВІТ -->
+  <div class="report-section">
+    <h2>Подання звіту</h2>
+    <p class="report-intro">Перевірте звіт і здайте його через Google Classroom — у розділі <strong>Завдання №6</strong>.</p>
+    <table class="report-table">
+      <thead><tr><th style="width:5%">#</th><th>Вимоги до звіту</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1</strong></td><td>Документ названо <strong>Звіт 6 — Прізвище</strong>, збережено в папці <strong>Лабораторні</strong>.</td></tr>
+        <tr><td><strong>2</strong></td><td>Шапка документа: «Студент(ка) 1 курсу», прізвище та ім'я, спеціальність, назва роботи.</td></tr>
+        <tr><td><strong>3</strong></td><td>Скріншоти під відповідними номерами: <strong>1.2 (Awesome Screenshot у дії), 2.2 (Google Drawings з панеллю інструментів), 3.2 (Draw.io з обома схемами), 4.3 (звіт із вставленими зображеннями)</strong>.</td></tr>
+        <tr><td><strong>4</strong></td><td>Посилання у звіті: три скріншоти (Етап 1), Google Малюнок (Етап 2), файл Draw.io (Етап 3) — усі з доступом «Переглядач».</td></tr>
+        <tr><td><strong>5</strong></td><td>Текстом вказано: яку тему Mermaid ви обрали та який промпт використали (Етап 3.2).</td></tr>
+        <tr><td><strong>6</strong></td><td>Здайте документ у Google Classroom: <strong>Завдання №6</strong> → <span style="background:rgba(255,255,255,0.15);border-radius:4px;padding:1px 7px;font-weight:700;">+ Додати або створити</span> → оберіть <strong>Звіт 6 — Прізвище</strong> → <span style="background:rgba(255,255,255,0.15);border-radius:4px;padding:1px 7px;font-weight:700;">Здати</span>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer>
+  Лабораторна робота №6 · Інформаційно-цифрові системи та технології · 2026–2027
+</footer>
+
+</body>
+</html>
