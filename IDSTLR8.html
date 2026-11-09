@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Лабораторна робота №8 — Презентація нового рівня</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green-dark:   #2D4A1E;
+      --green-mid:    #4A7A2A;
+      --green-light:  #D6E8C4;
+      --yellow-warm:  #F5C842;
+      --yellow-pale:  #FFFBEA;
+      --brown-dark:   #3D2B00;
+      --brown-mid:    #7A5A1A;
+      --brown-light:  #C8A84B;
+      --cream:        #F7F2E4;
+      --card-bg:      #FDFAF2;
+      --step-bg:      #F0EDD8;
+      --text-main:    #2A2000;
+      --text-muted:   #5C4D1A;
+      --border:       #C8BB8A;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Nunito', sans-serif; background: var(--cream); color: var(--text-main); line-height: 1.75; font-size: 16px; overflow-x: hidden; }
+
+    header { background: var(--green-dark); color: #fff; padding: 48px 24px 40px; text-align: center; border-bottom: 5px solid var(--yellow-warm); }
+    header .eyebrow { font-size: 13px; font-weight: 700; letter-spacing: .12em; color: var(--yellow-warm); text-transform: uppercase; margin-bottom: 12px; }
+    header h1 { font-family: 'Playfair Display', serif; font-size: clamp(22px,4vw,36px); line-height: 1.25; margin: 0 auto 16px; max-width: 700px; }
+    header .subtitle { font-size: 15px; color: #c8e8a8; max-width: 580px; margin: 0 auto; }
+
+    main { max-width: 860px; margin: 0 auto; padding: 48px 24px 64px; }
+
+    .meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 40px; }
+    .meta-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 20px 24px; }
+    .meta-card h3 { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 8px; }
+    .meta-card p { font-size: 15px; }
+
+    .scenario { background: var(--green-light); border-left: 4px solid var(--green-mid); border-radius: 0 8px 8px 0; padding: 20px 24px; margin-bottom: 16px; font-size: 15px; color: var(--green-dark); overflow-wrap: break-word; }
+
+    .before-start { background: var(--green-dark); border-radius: 10px; padding: 28px 32px; margin-bottom: 44px; color: #fff; }
+    .before-start h3 { font-family: 'Playfair Display', serif; font-size: 18px; color: var(--yellow-warm); margin-bottom: 6px; }
+    .before-start .before-intro { font-size: 14px; color: #c8e8a8; margin-bottom: 20px; }
+    .before-start ol { list-style: none; counter-reset: bc; display: flex; flex-direction: column; gap: 12px; }
+    .before-start ol li { counter-increment: bc; display: flex; gap: 14px; align-items: flex-start; font-size: 15px; line-height: 1.6; overflow-wrap: break-word; min-width: 0; }
+    .before-start ol li::before { content: counter(bc); flex-shrink: 0; width: 26px; height: 26px; background: var(--yellow-warm); color: var(--brown-dark); border-radius: 50%; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 3px; }
+    .ui-ref-dark { background: rgba(255,255,255,0.15); border-radius: 4px; padding: 1px 7px; font-weight: 700; font-size: 13.5px; white-space: normal; word-break: break-word; }
+
+    .task { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; margin-bottom: 36px; overflow: hidden; }
+    .task-header { display: flex; align-items: flex-start; gap: 20px; padding: 24px 28px; background: var(--yellow-pale); border-bottom: 1px solid var(--border); }
+    .task-num { flex-shrink: 0; width: 44px; height: 44px; background: var(--green-dark); color: #fff; font-family: 'Playfair Display', serif; font-size: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+    .task-title-block h2 { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--green-dark); line-height: 1.3; }
+    .task-title-block .task-desc { font-size: 14px; color: var(--text-muted); margin-top: 4px; font-style: italic; }
+    .task-body { padding: 24px 28px; }
+
+    .requirements { margin-bottom: 28px; }
+    .requirements h4 { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 12px; }
+    .requirements ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .requirements ul li { display: flex; gap: 10px; font-size: 15px; line-height: 1.6; overflow-wrap: break-word; min-width: 0; }
+    .requirements ul li::before { content: '›'; color: var(--green-mid); font-weight: 700; font-size: 18px; line-height: 1.4; flex-shrink: 0; }
+
+    .steps-section h4 { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 16px; }
+    .steps-group { margin-bottom: 24px; }
+    .steps-group-title { font-size: 15px; font-weight: 700; color: var(--green-dark); background: var(--green-light); border-radius: 6px; padding: 8px 14px; margin-bottom: 12px; display: inline-block; }
+    .steps-list { list-style: none; counter-reset: sc; display: flex; flex-direction: column; gap: 10px; padding-left: 8px; }
+    .steps-list li { counter-increment: sc; display: flex; gap: 14px; align-items: flex-start; font-size: 15px; line-height: 1.65; overflow-wrap: break-word; min-width: 0; }
+    .steps-list li::before { content: counter(sc); flex-shrink: 0; width: 26px; height: 26px; background: var(--brown-light); color: var(--brown-dark); border-radius: 50%; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; margin-top: 3px; }
+    .ui-ref { background: var(--step-bg); border: 1px solid var(--border); border-radius: 4px; padding: 2px 7px; font-size: 13.5px; font-weight: 700; color: var(--green-dark); white-space: normal; display: inline; word-break: break-word; }
+
+    .prompt-box { background: #1a1a2e; border-radius: 8px; padding: 20px 22px; margin: 14px 0; }
+    .prompt-box .prompt-label { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--yellow-warm); margin-bottom: 10px; font-family: 'Nunito', sans-serif; }
+    .prompt-box .prompt-text { font-family: 'Courier New', monospace; font-size: 13.5px; color: #e0e8ff; line-height: 1.8; white-space: pre-wrap; word-break: break-word; overflow-wrap: break-word; }
+    .prompt-box .prompt-var { color: #7dd3fc; font-style: italic; }
+    .prompt-box .prompt-comment { color: #6b7db3; font-size: 12px; margin-top: 10px; font-family: 'Nunito', sans-serif; font-style: italic; }
+
+    .rule-box { background: var(--step-bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; margin: 14px 0; }
+    .rule-box .rule-label { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 10px; }
+    .rule-row { display: flex; align-items: center; gap: 12px; padding: 6px 0; border-bottom: 1px dashed var(--border); font-size: 14.5px; overflow-wrap: break-word; min-width: 0; }
+    .rule-row:last-child { border-bottom: none; }
+    .rule-num { flex-shrink: 0; font-weight: 700; font-size: 22px; color: var(--green-dark); width: 32px; }
+    .rule-text strong { color: var(--green-dark); }
+
+    .note-box { background: var(--green-light); border-left: 4px solid var(--green-mid); border-radius: 0 6px 6px 0; padding: 14px 18px; margin: 16px 0; font-size: 14px; color: var(--green-dark); overflow-wrap: break-word; }
+    .note-box strong { font-weight: 700; }
+
+    .warn-box { background: #fff8e8; border-left: 4px solid var(--yellow-warm); border-radius: 0 6px 6px 0; padding: 14px 18px; margin: 16px 0; font-size: 14px; color: var(--brown-dark); overflow-wrap: break-word; }
+    .warn-box strong { font-weight: 700; }
+
+    .bonus-box { background: var(--yellow-pale); border: 2px dashed var(--brown-light); border-radius: 8px; padding: 16px 20px; margin: 20px 0; font-size: 14px; overflow-wrap: break-word; }
+    .bonus-box .bonus-label { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--brown-mid); margin-bottom: 8px; }
+
+    .screenshot-tag { display: inline-block; background: var(--yellow-warm); color: var(--brown-dark); font-size: 12px; font-weight: 700; border-radius: 4px; padding: 2px 10px; margin-top: 10px; }
+    .link-tag { display: inline-block; background: var(--green-dark); color: #fff; font-size: 12px; font-weight: 700; border-radius: 4px; padding: 2px 10px; margin-top: 6px; margin-left: 6px; }
+
+    .section-divider { border: none; border-top: 2px dashed var(--border); margin: 28px 0; }
+
+    .report-section { background: var(--green-dark); color: #fff; border-radius: 10px; padding: 32px 32px 28px; margin-top: 8px; }
+    .report-section h2 { font-family: 'Playfair Display', serif; font-size: 22px; color: var(--yellow-warm); margin-bottom: 6px; }
+    .report-section .report-intro { font-size: 14px; color: #c8e8a8; margin-bottom: 24px; }
+    .report-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    .report-table thead tr { background: rgba(255,255,255,.12); }
+    .report-table thead th { padding: 10px 14px; text-align: left; font-weight: 700; color: var(--yellow-warm); border-bottom: 1px solid rgba(255,255,255,.2); }
+    .report-table tbody tr { border-bottom: 1px solid rgba(255,255,255,.1); }
+    .report-table tbody td { padding: 10px 14px; color: #eee; vertical-align: top; overflow-wrap: break-word; }
+
+    footer { text-align: center; font-size: 13px; color: var(--text-muted); padding: 24px; border-top: 1px solid var(--border); margin-top: 16px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Інформаційно-цифрові системи та технології</div>
+  <h1>Лабораторна робота №8<br>Презентація, яка тримає увагу</h1>
+  <p class="subtitle">Наскрізний кейс «Цифрові звички» — ШІ-копірайтинг, власний макет, нелінійна навігація та живі дані</p>
+</header>
+
+<main>
+
+  <div class="meta-grid">
+    <div class="meta-card">
+      <h3>Мета роботи</h3>
+      <p>Створити професійну презентацію для конференції: структурувати зміст за допомогою ШІ, оформити власний макет у Theme Builder, налаштувати нелінійну навігацію та зв'язати слайди з живими даними.</p>
+    </div>
+    <div class="meta-card">
+      <h3>Обладнання та ПЗ</h3>
+      <p>Комп'ютер з доступом до інтернету; браузер Google Chrome; корпоративний обліковий запис Google; тези доповіді з Роботи №7; таблиця з Роботи №3.</p>
+    </div>
+  </div>
+
+  <div class="scenario">
+    <strong>Наскрізний кейс:</strong> Ви підготували тези доповіді (Робота 7) і вас запросили виступити на студентській конференції. Справжній жах для слухачів — слайди, забиті дрібним текстом і кліпартом із 2010 року. Сьогодні ви створите презентацію нового рівня: ШІ допоможе відібрати головне, власний макет замінить стандартні шаблони, а діаграми з вашого опитування оновлюватимуться прямо зі слайдів.
+  </div>
+
+  <div class="before-start">
+    <h3>⚑ Перед початком</h3>
+    <p class="before-intro">Підготуйте матеріали та створіть документ звіту.</p>
+    <ol>
+      <li>На Google Диску у папці <strong>Лабораторні</strong> створіть Google Документ <strong>Звіт 8 — Прізвище</strong>, оформіть шапку.</li>
+      <li>У окремій вкладці відкрийте документ <strong>Тези — Прізвище</strong> з Роботи №7 — він знадобиться в Етапі 1.</li>
+      <li>Відкрийте <strong>Google Презентації</strong> (slides.google.com) і створіть нову порожню презентацію. Назвіть її: <strong>Доповідь — Прізвище</strong>.</li>
+      <li>Залиште документ звіту відкритим — після кожного етапу вставляйте скріншот.</li>
+    </ol>
+  </div>
+
+  <!-- ЗАВДАННЯ 1 -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">1</div>
+      <div class="task-title-block">
+        <h2>ШІ-копірайтинг — Розкадровка презентації</h2>
+        <div class="task-desc">Правило 10-20-30 та Storyboarding через Google Gemini</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Ознайомитися з правилом 10-20-30 для презентацій</li>
+          <li>Попросити Gemini побудувати розкадровку з вашого тексту тез</li>
+          <li>Перенести структуру на слайди нової презентації</li>
+        </ul>
+      </div>
+
+      <div class="rule-box">
+        <div class="rule-label">Правило 10-20-30 (Гай Кавасакі)</div>
+        <div class="rule-row">
+          <span class="rule-num">10</span>
+          <span class="rule-text"><strong>слайдів</strong> — оптимальна кількість. Більше — аудиторія засинає</span>
+        </div>
+        <div class="rule-row">
+          <span class="rule-num">20</span>
+          <span class="rule-text"><strong>хвилин</strong> — максимум для виступу. Решта — питання</span>
+        </div>
+        <div class="rule-row">
+          <span class="rule-num">30</span>
+          <span class="rule-text"><strong>пунктів</strong> — мінімальний розмір шрифту. Дрібніший текст ніхто не читає з залу</span>
+        </div>
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">1.1 — Розкадровка через Gemini</div>
+          <ol class="steps-list">
+            <li>Відкрийте документ <strong>Тези — Прізвище</strong> та виділіть і скопіюйте весь текст (<strong>Ctrl+A → Ctrl+C</strong>).</li>
+            <li>Відкрийте <strong>gemini.google.com</strong> та вставте промпт нижче, підставивши скопійований текст у вказане місце.</li>
+          </ol>
+
+          <div class="prompt-box">
+            <div class="prompt-label">Промпт для Gemini — Storyboarding</div>
+            <div class="prompt-text">Ти — експерт із презентацій у стилі TED.
+Проаналізуй мій текст і створи структуру з 5 слайдів.
+
+Жорсткі обмеження:
+— На кожному слайді не більше 3 пунктів.
+— Кожен пункт — не довше 7 слів.
+— Для кожного слайда запропонуй ідею для візуалу
+  (що має бути на картинці або діаграмі).
+
+Відповідь оформи у вигляді таблиці:
+Слайд | Заголовок | Пункти (макс. 3) | Ідея для візуалу
+
+Ось мій текст:
+<span class="prompt-var">[вставте текст ваших тез]</span></div>
+            <div class="prompt-comment">Якщо Gemini порушив обмеження (написав довші пункти) — напишіть: «Скороти всі пункти до 7 слів»</div>
+          </div>
+
+          <ol class="steps-list">
+            <li>Перегляньте таблицю від Gemini. Перевірте: чи дотримані обмеження щодо кількості слів у пунктах.</li>
+            <li>Відкрийте вашу презентацію <strong>Доповідь — Прізвище</strong>. Перенесіть заголовки та пункти на слайди (по одному слайду на рядок таблиці). Ідеї для візуалів — поки що залиште як текстові нотатки в полі «Нотатки доповідача» під слайдом.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: таблиця-розкадровка від Gemini з усіма 5 слайдами</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗАВДАННЯ 2 -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">2</div>
+      <div class="task-title-block">
+        <h2>Власний макет у Theme Builder</h2>
+        <div class="task-desc">Єдиний корпоративний стиль замість стандартних шаблонів</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Відкрити Theme Builder і створити власний макет слайда</li>
+          <li>Додати на макет заповнювач заголовка, заповнювач зображення та підпис</li>
+          <li>Застосувати власний макет до слайдів 2–5</li>
+        </ul>
+      </div>
+
+      <div class="note-box">
+        <strong>Навіщо це потрібно:</strong> Theme Builder дозволяє один раз налаштувати розташування елементів і шрифти — і всі слайди з цим макетом автоматично виглядатимуть однаково. Це те, що відрізняє «студентську» презентацію від «корпоративної».
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">2.1 — Відкрити Theme Builder</div>
+          <ol class="steps-list">
+            <li>У вашій презентації відкрийте меню <span class="ui-ref">Слайд</span> → <span class="ui-ref">Редагувати тему</span> (або <span class="ui-ref">Вигляд</span> → <span class="ui-ref">Конструктор тем</span> — назва залежить від версії інтерфейсу).</li>
+            <li>У лівій панелі побачите список макетів теми. Натисніть правою кнопкою миші на будь-який макет → <span class="ui-ref">Вставити макет</span> (Insert layout).</li>
+            <li>Новий порожній макет з'явиться в списку. Двічі клікніть на його назві і перейменуйте: <strong>«Мій корпоративний»</strong>.</li>
+          </ol>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">2.2 — Наповнення макета</div>
+          <ol class="steps-list">
+            <li>На порожньому макеті відкрийте меню <span class="ui-ref">Вставити</span> → <span class="ui-ref">Заповнювач</span> → <span class="ui-ref">Заголовок</span>. Перетягніть рамку у верхню частину слайда.</li>
+            <li>Знову <span class="ui-ref">Вставити</span> → <span class="ui-ref">Заповнювач</span> → <span class="ui-ref">Зображення</span> — оберіть форму (коло або прямокутник). Розмістіть у правій частині слайда.</li>
+            <li>Додайте текстове поле: <span class="ui-ref">Вставити</span> → <span class="ui-ref">Текстове поле</span>. Намалюйте вузьку смугу внизу слайда. Введіть текст: <em>«Студент(ка) [Прізвище] | Назва університету»</em>. Зменшіть шрифт до 10–12 пт і встановіть колір тексту приглушений (сірий або білий).</li>
+            <li>Натисніть <span class="ui-ref">← Закрити</span> у верхньому лівому куті, щоб вийти з Theme Builder.</li>
+          </ol>
+          <div class="warn-box">
+            <strong>Якщо пункт «Заповнювач» недоступний:</strong> Це нормально — меню «Вставити → Заповнювач» активне лише в режимі Theme Builder. Переконайтеся, що ви справді перебуваєте всередині нього (заголовок вікна повинен показувати назву теми, а не презентації).
+          </div>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">2.3 — Застосування макета до слайдів</div>
+          <ol class="steps-list">
+            <li>У лівій панелі презентації виділіть слайди 2, 3, 4 і 5 (клік на перший, потім Shift+клік на останній).</li>
+            <li>Натисніть правою кнопкою → <span class="ui-ref">Застосувати макет</span> → знайдіть у списку <strong>«Мій корпоративний»</strong> і клікніть на нього.</li>
+            <li>Переконайтеся, що на кожному слайді з'явилися заповнювачі у правильних місцях.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: режим Theme Builder із вашим власним макетом і заповнювачами</div>
+        </div>
+
+        <div class="bonus-box">
+          <div class="bonus-label">⭐ Альтернатива — ШІ у Google Slides</div>
+          Якщо у вашому акаунті доступна кнопка <strong>«Створити за допомогою Gemini»</strong> (або значок зірочки ✦ на порожньому слайді) — спробуйте описати потрібний вигляд слайда текстом і подивіться, що запропонує ШІ. Результат можна взяти за основу і доопрацювати вручну.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗАВДАННЯ 3 -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">3</div>
+      <div class="task-title-block">
+        <h2>Нелінійна навігація</h2>
+        <div class="task-desc">Слайд-меню з гіперпосиланнями — стрибки по презентації як по сайту</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Перетворити Слайд 2 на інтерактивне меню з кнопками-фігурами</li>
+          <li>Прив'язати кожну кнопку до відповідного слайда через гіперпосилання</li>
+          <li>На слайдах 3–5 додати кнопку «В меню» із посиланням назад на Слайд 2</li>
+        </ul>
+      </div>
+
+      <div class="note-box">
+        <strong>Навіщо це потрібно:</strong> Під час виступу на конференції аудиторія ставить несподівані питання — і доповідач має швидко показати потрібний слайд. Перегортати 20 слайдів кнопкою «Назад» на очах у залу — незручно. Навігаційне меню дозволяє «стрибнути» до будь-якого розділу за один клік.
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">3.1 — Слайд-меню (Слайд 2)</div>
+          <ol class="steps-list">
+            <li>Перейдіть на <strong>Слайд 2</strong>. Додайте заголовок: <strong>«Зміст»</strong>.</li>
+            <li>На панелі інструментів натисніть іконку <span class="ui-ref">Фігури</span> → оберіть прямокутник із заокругленими кутами. Намалюйте першу кнопку. Додайте текст: <strong>«Методологія»</strong>.</li>
+            <li>Скопіюйте кнопку (Ctrl+C → Ctrl+V) ще двічі. Змініть текст на <strong>«Результати»</strong> та <strong>«Висновки»</strong>. Розмістіть три кнопки рівномірно.</li>
+            <li>Виділіть кнопку <strong>«Методологія»</strong>. Натисніть <span class="ui-ref">Вставити</span> → <span class="ui-ref">Посилання</span> (або <strong>Ctrl+K</strong>).</li>
+            <li>У вікні, що відкрилось, натисніть <span class="ui-ref">Слайди в цій презентації</span> і оберіть слайд з методологією. Натисніть <span class="ui-ref">Застосувати</span>.</li>
+            <li>Повторіть кроки 4–5 для кнопок «Результати» і «Висновки», вказавши відповідні слайди.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: Слайд 2 із відкритим вікном налаштування гіперпосилання на кнопці</div>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">3.2 — Кнопка «В меню» на слайдах 3–5</div>
+          <ol class="steps-list">
+            <li>Перейдіть на <strong>Слайд 3</strong>. Намалюйте невелику фігуру або текстове поле у правому нижньому куті. Напишіть: <strong>«↩ Меню»</strong>.</li>
+            <li>Прив'яжіть гіперпосилання до <strong>Слайду 2</strong> (той самий алгоритм: <span class="ui-ref">Вставити</span> → <span class="ui-ref">Посилання</span> → <span class="ui-ref">Слайди в цій презентації</span> → Слайд 2).</li>
+            <li>Скопіюйте цю кнопку і вставте на <strong>Слайди 4 і 5</strong> — гіперпосилання збережеться.</li>
+            <li>Запустіть презентацію (<strong>Ctrl+F5</strong> або кнопка ▶). Перевірте навігацію: натисніть на кнопки меню і «↩ Меню» — переходи мають працювати.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗАВДАННЯ 4 -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">4</div>
+      <div class="task-title-block">
+        <h2>Живі дані та Q&A з аудиторією</h2>
+        <div class="task-desc">Діаграма, яка оновлюється автоматично, та інтерактивна сесія запитань</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Вставити діаграму з Google Таблиць <strong>із зв'язком</strong> — щоб вона оновлювалась при зміні даних</li>
+          <li>Перевірити механізм оновлення: змінити дані → побачити кнопку «Оновити» у презентації</li>
+          <li>Запустити Q&A сесію через Режим доповідача</li>
+        </ul>
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">4.1 — Вставка «живої» діаграми</div>
+          <ol class="steps-list">
+            <li>Відкрийте файл <strong>Опитування_Цифрові_звички</strong> з Роботи №3 (Google Таблиці).</li>
+            <li>Перейдіть на аркуш <strong>«Аналітика»</strong>. Клікніть на будь-яку діаграму → у правому верхньому куті діаграми натисніть три крапки <span class="ui-ref">⋮</span> → <span class="ui-ref">Копіювати діаграму</span>.</li>
+            <li>Поверніться у презентацію. Перейдіть на слайд із результатами. Натисніть <strong>Ctrl+V</strong> для вставки.</li>
+            <li>У вікні, що з'явиться, обов'язково оберіть <span class="ui-ref">Зв'язати з електронною таблицею</span> (не «Вставити без зв'язку»). Натисніть <span class="ui-ref">Вставити</span>.</li>
+          </ol>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">4.2 — Перевірка механізму оновлення</div>
+          <ol class="steps-list">
+            <li>Поверніться у Google Таблицю → аркуш «Аналітика». Знайдіть будь-яку числову комірку з даними і <strong>тимчасово</strong> змініть її значення (наприклад, замініть 12 на 20).</li>
+            <li>Поверніться у презентацію. На вставленій діаграмі у правому верхньому куті з'явиться кнопка <span class="ui-ref">↻ Оновити</span> — натисніть її. Діаграма зміниться.</li>
+            <li>Поверніться у таблицю і <strong>відновіть оригінальне значення</strong> — щоб не псувати дані з Роботи №3.</li>
+          </ol>
+          <div class="warn-box">
+            <strong>Важливо:</strong> Після перевірки обов'язково поверніть змінене значення назад. Дані опитування — це реальні результати Роботи №3, їх псувати не варто.
+          </div>
+          <div class="screenshot-tag">📸 Скріншот: слайд із діаграмою та видимою кнопкою «Оновити»</div>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">4.3 — Q&A сесія для аудиторії</div>
+          <ol class="steps-list">
+            <li>У правому верхньому куті презентації натисніть стрілку поруч із кнопкою <span class="ui-ref">▶ Слайд-шоу</span> → оберіть <span class="ui-ref">Режим доповідача</span> (Presenter view).</li>
+            <li>Відкриється два вікна: слайди для аудиторії і панель доповідача для вас. На панелі доповідача знайдіть вкладку <span class="ui-ref">Інструменти аудиторії</span> (Audience Tools).</li>
+            <li>Натисніть <span class="ui-ref">Почати</span> — на слайді автоматично з'явиться плашка з посиланням виду <em>slides.app.goo.gl/xxx</em>.</li>
+            <li>За цим посиланням слухачі зі своїх смартфонів можуть надсилати запитання в реальному часі — ви бачите їх на панелі доповідача.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: режим показу слайдів із плашкою Q&A та посиланням для аудиторії</div>
+          <div class="link-tag">🔗 Посилання на готову презентацію (доступ — Переглядач)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗАВДАННЯ 5 — Нотатки доповідача -->
+  <div class="task">
+    <div class="task-header">
+      <div class="task-num">5</div>
+      <div class="task-title-block">
+        <h2>Нотатки доповідача та фінальна перевірка</h2>
+        <div class="task-desc">Невидима «шпаргалка» для впевненого виступу</div>
+      </div>
+    </div>
+    <div class="task-body">
+
+      <div class="requirements">
+        <h4>Що потрібно зробити</h4>
+        <ul>
+          <li>Заповнити нотатки доповідача для кожного слайда — коротко, що сказати вголос</li>
+          <li>Переглянути презентацію в режимі доповідача — переконатися, що нотатки видно лише вам</li>
+          <li>Перевірити посилання на зовнішні ресурси (якщо є)</li>
+        </ul>
+      </div>
+
+      <div class="note-box">
+        <strong>Нотатки доповідача</strong> — поле під кожним слайдом, яке видно тільки вам під час виступу (на вашому екрані), але не аудиторії. Це ваша «шпаргалка»: ключові факти, цифри, що сказати між слайдами.
+      </div>
+
+      <hr class="section-divider">
+
+      <div class="steps-section">
+        <h4>Покроковий алгоритм</h4>
+
+        <div class="steps-group">
+          <div class="steps-group-title">5.1 — Заповнення нотаток</div>
+          <ol class="steps-list">
+            <li>Під кожним слайдом знайдіть поле <strong>«Натисніть, щоб додати нотатки доповідача»</strong>. Клікніть на нього.</li>
+            <li>Для кожного слайда запишіть 2–3 речення: що ви скажете вголос, яку цифру або факт згадаєте, як перейдете до наступного слайда.</li>
+            <li>Ідеї для нотаток вже є у полі «Нотатки доповідача» — ви перенесли їх туди з розкадровки Gemini (Етап 1, крок 4).</li>
+          </ol>
+        </div>
+
+        <div class="steps-group">
+          <div class="steps-group-title">5.2 — Перевірка в режимі доповідача</div>
+          <ol class="steps-list">
+            <li>Запустіть <span class="ui-ref">Режим доповідача</span> (стрілка поруч із ▶ → Presenter view).</li>
+            <li>На панелі доповідача переконайтеся, що нотатки відображаються під попереднім переглядом наступного слайда.</li>
+            <li>Перевірте, що на проекційному вікні (для аудиторії) нотаток не видно.</li>
+          </ol>
+          <div class="screenshot-tag">📸 Скріншот: панель доповідача з видимими нотатками та попереднім переглядом наступного слайда</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ЗВІТ -->
+  <div class="report-section">
+    <h2>Подання звіту</h2>
+    <p class="report-intro">Перевірте звіт і здайте його через Google Classroom — у розділі <strong>Завдання №8</strong>.</p>
+    <table class="report-table">
+      <thead><tr><th style="width:5%">#</th><th>Вимоги до звіту</th></tr></thead>
+      <tbody>
+        <tr><td><strong>1</strong></td><td>Документ названо <strong>Звіт 8 — Прізвище</strong>, збережено в папці <strong>Лабораторні</strong>.</td></tr>
+        <tr><td><strong>2</strong></td><td>Шапка документа: «Студент(ка) 1 курсу», прізвище та ім'я, спеціальність, назва роботи.</td></tr>
+        <tr><td><strong>3</strong></td><td>Скріншоти під відповідними номерами: <strong>1.1 (розкадровка Gemini), 2.3 (Theme Builder із власним макетом), 3.1 (меню з гіперпосиланням), 4.2 (діаграма з кнопкою «Оновити»), 4.3 (Q&A сесія з посиланням для аудиторії), 5.2 (панель доповідача з нотатками)</strong>.</td></tr>
+        <tr><td><strong>4</strong></td><td>Посилання на готову презентацію <strong>Доповідь — Прізвище</strong> з доступом «Переглядач».</td></tr>
+        <tr><td><strong>5</strong></td><td>Здайте документ у Google Classroom: <strong>Завдання №8</strong> → <span style="background:rgba(255,255,255,0.15);border-radius:4px;padding:1px 7px;font-weight:700;">+ Додати або створити</span> → оберіть <strong>Звіт 8 — Прізвище</strong> → <span style="background:rgba(255,255,255,0.15);border-radius:4px;padding:1px 7px;font-weight:700;">Здати</span>.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</main>
+
+<footer>
+  Лабораторна робота №8 · Інформаційно-цифрові системи та технології · 2026–2027
+</footer>
+
+</body>
+</html>
